@@ -2,3 +2,4 @@
 #include "core/scene/entity.h"
 #include "core/scene/scene.h"
 #include "core/game.h"
+#include "renderer/renderer.h"

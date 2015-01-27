@@ -1,5 +1,7 @@
 CC=gcc
 
+LDLIBS = -lSDL2 -framework OpenGL
+
 DEBUG=false
 INCLUDEDIR=./include
 SRCDIR=./
@@ -17,7 +19,7 @@ endif
 all: $(TARGET)
 
 $(TARGET): $(OBJECTS)
-		$(CC) $^ -o $@
+		$(CC) $^ -o $@ $(LDLIBS)
 
 .PHONY: clean
 clean:
