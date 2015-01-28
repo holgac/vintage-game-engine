@@ -16,11 +16,12 @@
 #include <time.h>
 #include <SDL2/SDL.h>
 #include <core/game.h>
+#include <core/resource/resourcemanager.h>
 #include <renderer/renderer.h>
 #include <input/input.h>
 
 
-int vge_game_init(struct vge_game* game, char** argv, char** envp, unsigned int flags)
+int vge_game_init(struct vge_game* game, char** argv, char** envp, char* resourcedir, unsigned int flags)
 {
 	unsigned int sdl_init_flags = SDL_INIT_NOPARACHUTE;
 	game->status = 0;
@@ -63,6 +64,9 @@ int vge_game_init(struct vge_game* game, char** argv, char** envp, unsigned int 
 		}
 		return -1;
 	}
+	game->rman = malloc(sizeof(struct vge_resource_manager));
+	vge_resource_manager_init(game->rman);
+	vge_resource_manager_loadrecursive(game->rman, resourcedir);
 
 	return 0;
 }

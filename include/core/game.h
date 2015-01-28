@@ -11,12 +11,15 @@ struct vge_input;
 	Game structure. Works like a context to avoid static variables
 	and non-reentrancy.
  */
+struct vge_resource_manager;
+
 struct vge_game
 {
 	struct vge_game_state* state;
 
 	struct vge_renderer* renderer;
 	struct vge_input* input;
+	struct vge_resource_manager* rman;
 
 	struct vge_timer step_timer;
 	float step_frequency;
@@ -31,7 +34,7 @@ struct vge_game
 	Initializes vge_game. specify which modules to use via flags.
 	modules must also be initialized separately via vge_[module]_init.
  */
-int vge_game_init(struct vge_game* game, char** argv, char** envp, unsigned int flags);
+int vge_game_init(struct vge_game* game, char** argv, char** envp, char* resourcedir, unsigned int flags);
 /*
 	Starts game loop
  */
