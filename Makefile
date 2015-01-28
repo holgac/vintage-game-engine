@@ -5,7 +5,7 @@ LDLIBS = -lSDL2 -framework OpenGL
 DEBUG=false
 INCLUDEDIR=./include
 SRCDIR=./
-CFLAGS=-c -I$(INCLUDEDIR) -g
+CFLAGS=-c -I$(INCLUDEDIR) -g -Wall
 OPT=-Wall
 SOURCES=$(shell find $(SRCDIR) -name "*.c")
 OBJECTS=$(SOURCES:%.c=%.o)

@@ -13,11 +13,19 @@
 	You should have received a copy of the GNU General Public License
 	along with Vintage Game Engine.  If not, see <http://www.gnu.org/licenses/>.
 */
-#include "core/scene/component.h"
-#include "core/scene/entity.h"
-#include "core/scene/scene.h"
-#include "core/game.h"
-#include "core/container/container.h"
-#include "renderer/renderer.h"
-#include "input/keycodes.h"
-#include "input/input.h"
+#ifndef _VGE_H_
+
+/*
+	These typedefs are to be used in internal structures,
+	User functions should always use proper syntax instead.
+ */
+typedef char s8;
+typedef short s16;
+typedef int s32;
+typedef long long s64;
+typedef unsigned char u8;
+typedef unsigned short u16;
+typedef unsigned int u32;
+typedef unsigned long long u64;
+
+#endif /* _VGE_H_ */

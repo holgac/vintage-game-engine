@@ -13,31 +13,36 @@
 	You should have received a copy of the GNU General Public License
 	along with Vintage Game Engine.  If not, see <http://www.gnu.org/licenses/>.
 */
-#ifndef _VGE_RENDERER_H_
-#include <SDL2/SDL.h>
-#include <SDL2/SDL_opengl.h>
+#ifndef _VGE_CONTAINER_H_
+#include <vge.h>
 
-struct vge_window_properties
+struct vge_container_chunk
 {
-	char* window_title;
-	int pos_x;
-	int pos_y;
-	int width;
-	int height;
-	int depth_buffer_size;
+	struct vge_container_chunk* next;
+	u32 size;
+	u32 capacity;
+	void* first_free;
+	u8* data_table;
 };
 
-struct vge_renderer
+/*
+	Regular memory container.
+	Provides chunk based allocation for fixed size objects.
+	Does NOT defragment the memory!
+ */
+struct vge_container
 {
-	struct SDL_Window* sdl_window;
-	SDL_GLContext sdl_glcontext;
-	SDL_Renderer* sdl_renderer;
+	u32 obj_size;
+	u32 size;
+	u32 capacity;
+	struct vge_container_chunk* chunk;
 };
 
-int vge_renderer_init(struct vge_renderer* renderer, struct vge_window_properties* window_properties);
-void vge_renderer_destroy(struct vge_renderer* renderer);
+int vge_container_init(struct vge_container* container, int obj_size);
+void vge_container_destroy(struct vge_container* container);
 
-void vge_renderer_onframe(struct vge_renderer* renderer);
-void vge_renderer_setclearcolor(struct vge_renderer* renderer, float r, float g, float b);
+void* vge_container_alloc(struct vge_container* container);
+void vge_container_free(struct vge_container* container, void* ptr);
 
-#endif /* _VGE_RENDERER_H_ */
+
+#endif /* _VGE_CONTAINER_H_ */

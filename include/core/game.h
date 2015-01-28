@@ -21,7 +21,7 @@ struct vge_game
 	struct vge_timer step_timer;
 	float step_frequency;
 
-	int status;
+	unsigned int status;
 
 	void (*onframe_cb)(struct vge_game*);
 	void (*onstep_cb)(struct vge_game*);
