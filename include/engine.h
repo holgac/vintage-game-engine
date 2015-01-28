@@ -3,3 +3,5 @@
 #include "core/scene/scene.h"
 #include "core/game.h"
 #include "renderer/renderer.h"
+#include "input/keycodes.h"
+#include "input/input.h"

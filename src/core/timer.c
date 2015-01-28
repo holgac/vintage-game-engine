@@ -8,7 +8,7 @@
  */
 float _vge_cur_time;
 
-static float _vge_get_cur_time()
+float vge_timer_cur_time()
 {
 #ifdef __MACH__ // OS X does not have clock_gettime, use clock_get_time
 	clock_serv_t cclock;
@@ -42,5 +42,5 @@ int vge_timer_check(struct vge_timer* timer, int flags)
 
 void vge_timer_update()
 {
-	_vge_cur_time = _vge_get_cur_time();
+	_vge_cur_time = vge_timer_cur_time();
 }

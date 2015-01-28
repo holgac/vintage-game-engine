@@ -14,7 +14,6 @@ struct vge_window_properties
 
 struct vge_renderer
 {
-	int dummy;
 	struct SDL_Window* sdl_window;
 	SDL_GLContext sdl_glcontext;
 	SDL_Renderer* sdl_renderer;

@@ -24,8 +24,15 @@ void vge_timer_init(struct vge_timer* timer, float period);
 int vge_timer_check(struct vge_timer* timer, int flags);
 
 /*
-	internal function that is called each frame. do not call directly.
+	Internal function that is called each frame. do not call.
  */
 void vge_timer_update();
+
+/*
+	Returns current time in seconds.
+	The absolute value may not be meaningful, using time differences
+	is clearly a better idea.
+ */
+float vge_timer_cur_time();
 
 #endif /* _VGE_TIMER_H_ */

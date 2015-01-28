@@ -7,12 +7,8 @@
 
 int vge_renderer_init(struct vge_renderer* renderer, struct vge_window_properties* window_properties)
 {
-	if (SDL_Init(SDL_INIT_VIDEO) != 0)
-	{
-		fprintf(stderr, "SDL_Init Error: %s\n", SDL_GetError());
-		return -1;
-	}
-	
+	GLenum gl_error;
+
 	renderer->sdl_window = SDL_CreateWindow(
 		window_properties?window_properties->window_title:"vge test",
 		window_properties?window_properties->pos_x:SDL_WINDOWPOS_CENTERED,
@@ -42,35 +38,34 @@ int vge_renderer_init(struct vge_renderer* renderer, struct vge_window_propertie
 
 	renderer->sdl_renderer = SDL_CreateRenderer(renderer->sdl_window, -1, SDL_RENDERER_ACCELERATED);
 
-	glClearColor(1.0, 0.0, 0.0, 1.0 );
-	    glMatrixMode( GL_PROJECTION );
-    glLoadIdentity();
+	glClearColor(0.0f, 0.0f, 0.0f, 1.0f );
+	glMatrixMode( GL_PROJECTION );
+	glLoadIdentity();
 
-    GLenum     error = glGetError();
-    if( error != GL_NO_ERROR )
-    {
-    	printf("ERROR ERROR");
-        return -1;
-    }
+	gl_error = glGetError();
+	if( gl_error != GL_NO_ERROR )
+	{
+		printf("ERROR ERROR");
+		return -1;
+	}
 
-    //Initialize Modelview Matrix
-    glMatrixMode( GL_MODELVIEW );
-    glLoadIdentity();
+	//Initialize Modelview Matrix
+	glMatrixMode( GL_MODELVIEW );
+	glLoadIdentity();
 
 	return 0;
 }
 
 void vge_renderer_onframe(struct vge_renderer* renderer)
 {
-    glClear(GL_COLOR_BUFFER_BIT);
-            glBegin( GL_QUADS );
-            glVertex2f( -0.5f, -0.5f );
-            glVertex2f( 0.5f, -0.5f );
-            glVertex2f( 0.5f, 0.5f );
-            glVertex2f( -0.5f, 0.5f );
-        glEnd();
-    SDL_GL_SwapWindow(renderer->sdl_window);
-    SDL_PumpEvents();
+	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+	glBegin( GL_QUADS );
+	glVertex2f( -0.5f, -0.5f );
+	glVertex2f( 0.5f, -0.5f );
+	glVertex2f( 0.5f, 0.5f );
+	glVertex2f( -0.5f, 0.5f );
+	glEnd();
+	SDL_GL_SwapWindow(renderer->sdl_window);
 }
 
 void vge_renderer_destroy(struct vge_renderer* renderer)
@@ -78,7 +73,6 @@ void vge_renderer_destroy(struct vge_renderer* renderer)
 	SDL_GL_DeleteContext(renderer->sdl_glcontext);
 	SDL_DestroyRenderer(renderer->sdl_renderer);
 	SDL_DestroyWindow(renderer->sdl_window);
-	SDL_Quit();
 }
 
 void vge_renderer_setclearcolor(struct vge_renderer* renderer, float r, float g, float b)
