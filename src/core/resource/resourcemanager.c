@@ -129,6 +129,9 @@ void vge_resource_manager_loadrecursive(
 void vge_resource_manager_registerloader(struct vge_resource_manager* rman,
 	struct vge_resource_loader* loader)
 {
+	/*
+		TODO: sanity checks
+	 */
 	loader->next = rman->loader;
 	rman->loader = loader;
 }
