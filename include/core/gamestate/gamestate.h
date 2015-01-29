@@ -16,11 +16,13 @@
 #ifndef _VGE_GAME_STATE_H_
 
 struct vge_scene;
+struct vge_game;
 
 struct vge_game_state
 {
 	struct vge_scene* scene;
-
+	void (*onframe_cb)(struct vge_game*);
+	void (*onstep_cb)(struct vge_game*);
 };
 
 #endif /* _VGE_GAME_STATE_H_ */

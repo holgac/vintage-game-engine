@@ -25,9 +25,6 @@ struct vge_game
 	float step_frequency;
 
 	unsigned int status;
-
-	void (*onframe_cb)(struct vge_game*);
-	void (*onstep_cb)(struct vge_game*);
 };
 
 /*

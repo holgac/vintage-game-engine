@@ -33,11 +33,13 @@ void onstep_cb(struct vge_game* game)
 int main(int argc, char** argv, char** envp)
 {
 	struct vge_game game;
+	struct vge_game_state state;
 	vge_game_init(&game, argv, envp, "./resources", VGEGAME_INIT_RENDERER | VGEGAME_INIT_INPUT);
+	game.state = &state;
+	state.onframe_cb = onframe_cb;
+	state.onstep_cb = onstep_cb;
 	vge_renderer_init(game.renderer, NULL);
 	vge_input_init(game.input);
-	game.onframe_cb = onframe_cb;
-	game.onstep_cb = onstep_cb;
 	vge_game_start(&game);
 	return 0;
 }
