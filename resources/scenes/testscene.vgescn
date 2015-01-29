@@ -1,0 +1,15 @@
+{
+	"name":"testscene",
+	"entities": [
+		{
+			"name": "logo",
+			"position": "0 0",
+			"rotation": "deg(0)",
+			"prefab": "logosquare",
+		}
+	],
+	"camera": {
+		"position": "0 0",
+		"rotation": "0"
+	}
+}

@@ -14,15 +14,18 @@
 	along with Vintage Game Engine.  If not, see <http://www.gnu.org/licenses/>.
 */
 #ifndef _VGE_RESOURCE_MANAGER_H_
-#define VGERESOURCE_EXTENSION_MAX 5
+#define VGERESOURCE_EXTENSION_MAX 8
 
 struct vge_resource;
+struct vge_resource_manager;
 
 struct vge_resource_loader
 {
 	char extension[VGERESOURCE_EXTENSION_MAX];
 	struct vge_resource_loader* next;
 	struct vge_resource* (*load)(const char* path);
+	struct vge_resource* (*clone)(struct vge_resource* res,
+		struct vge_resource_manager* rman);
 	void (*unload)(struct vge_resource* res);
 };
 

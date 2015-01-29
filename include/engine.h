@@ -16,6 +16,7 @@
 #include "core/scene/component.h"
 #include "core/scene/entity.h"
 #include "core/scene/scene.h"
+#include "core/gamestate/gamestate.h"
 #include "core/game.h"
 #include "core/container/container.h"
 #include "renderer/renderer.h"

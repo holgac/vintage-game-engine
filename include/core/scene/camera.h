@@ -13,13 +13,11 @@
 	You should have received a copy of the GNU General Public License
 	along with Vintage Game Engine.  If not, see <http://www.gnu.org/licenses/>.
 */
-#ifndef _VGE_ENTITY_H_
+#ifndef _VGE_CAMERA_H_
 
-struct vge_component;
-struct vge_entity
+struct vge_camera
 {
-	struct vge_entity* next;
-	struct vge_component* component;
+	struct vge_entity* entity;
 };
 
-#endif /* _VGE_ENTITY_H_ */
+#endif /* _VGE_CAMERA_H_ */

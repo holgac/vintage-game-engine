@@ -16,6 +16,7 @@
 #include <time.h>
 #include <SDL2/SDL.h>
 #include <core/game.h>
+#include <core/gamestate/gamestate.h>
 #include <core/resource/resourcemanager.h>
 #include <renderer/renderer.h>
 #include <input/input.h>
@@ -81,9 +82,9 @@ void vge_game_start(struct vge_game* game)
 		vge_timer_update();
 		if(vge_timer_check(&game->step_timer, VGETIMER_REWIND))
 		{
-			game->onstep_cb(game);
+			game->state->onstep_cb(game);
 		}
-		game->onframe_cb(game);
+		game->state->onframe_cb(game);
 		if(game->renderer)
 		{
 			vge_renderer_onframe(game->renderer);

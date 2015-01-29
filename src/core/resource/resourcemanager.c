@@ -23,7 +23,6 @@
 #include <limits.h>
 #include <core/resource/resourcemanager.h>
 #include <core/resource/resource.h>
-#include <core/resource/resourceloader.h>
 
 static struct vge_resource_loader* _find_loader(
 	struct vge_resource_manager* rman, const char* ext)
