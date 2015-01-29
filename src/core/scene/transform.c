@@ -13,16 +13,31 @@
 	You should have received a copy of the GNU General Public License
 	along with Vintage Game Engine.  If not, see <http://www.gnu.org/licenses/>.
 */
-#ifndef _VGE_TRANSFORM_H_
-#include "../math/vector.h"
+#include <core/scene/transform.h>
+#include <external/nxjson/nxjson.h>
 
-struct vge_transform
+int vge_transform_read(struct vge_transform* dst, const struct nx_json* json)
 {
-	struct vge_vector2 position;
-	float rotation;
-};
-struct nx_json;
-int vge_transform_read(struct vge_transform* dst, const struct nx_json* json);
+	const nx_json* elem;
+	elem = nx_json_get(json, "position");
+	if(elem)
+		vge_vector2_read(&dst->position, elem->text_value);
+	else
+		vge_vector2_identity(&dst->position);
+	elem = nx_json_get(json, "rotation");
+	if(elem)
+		dst->rotation = (float)elem->dbl_value;
+	else
+		dst->rotation = 0.0f;
+	/*
+		TODO: return -1 if position or rotation types are not appropriate
+	 */
+	return 0;
+}
+
 void vge_transform_clone(struct vge_transform* restrict dst,
-	const struct vge_transform* restrict src);
-#endif /* _VGE_TRANSFORM_H_ */
+	const struct vge_transform* restrict src)
+{
+	vge_vector2_clone(&dst->position, &src->position);
+	dst->rotation = src->rotation;
+}

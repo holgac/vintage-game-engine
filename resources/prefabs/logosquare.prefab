@@ -1,0 +1,15 @@
+{
+	"position": "0 0",
+	"rotation": "0",
+	"components": [
+		{
+			"type": "graphics_component",
+			"vertices":[
+				"-1 -1",
+				"1 -1",
+				"1 1",
+				"-1 1"
+			]
+		}
+	]
+}

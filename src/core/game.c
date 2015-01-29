@@ -18,6 +18,7 @@
 #include <core/game.h>
 #include <core/gamestate/gamestate.h>
 #include <core/resource/resourcemanager.h>
+#include <core/resource/prefab.h>
 #include <renderer/renderer.h>
 #include <input/input.h>
 
@@ -67,6 +68,7 @@ int vge_game_init(struct vge_game* game, char** argv, char** envp, char* resourc
 	}
 	game->rman = malloc(sizeof(struct vge_resource_manager));
 	vge_resource_manager_init(game->rman);
+	vge_resource_manager_registerloader(game->rman, vge_prefab_get_loader());
 	vge_resource_manager_loadrecursive(game->rman, resourcedir);
 
 	return 0;

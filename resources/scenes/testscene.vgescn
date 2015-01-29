@@ -4,8 +4,8 @@
 		{
 			"name": "logo",
 			"position": "0 0",
-			"rotation": "deg(0)",
-			"prefab": "logosquare",
+			"rotation": "0",
+			"prefab": "logosquare"
 		}
 	],
 	"camera": {

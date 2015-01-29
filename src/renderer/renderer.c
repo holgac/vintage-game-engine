@@ -60,7 +60,7 @@ int vge_renderer_init(struct vge_renderer* renderer, struct vge_window_propertie
 	gl_error = glGetError();
 	if( gl_error != GL_NO_ERROR )
 	{
-		printf("ERROR ERROR");
+		fprintf(stderr, "OpenGL Error\n");
 		return -1;
 	}
 

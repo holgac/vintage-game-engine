@@ -25,19 +25,21 @@ struct vge_vector2
  */
 void vge_vector2_identity(struct vge_vector2* dst);
 void vge_vector2_clone(struct vge_vector2* restrict dst, 
-	struct vge_vector2* restrict src);
+	const struct vge_vector2* restrict src);
 void vge_vector2_addv(struct vge_vector2* restrict dst, 
-	struct vge_vector2* restrict src);
+	const struct vge_vector2* restrict src);
 void vge_vector2_adds(struct vge_vector2* dst, float scalar);
 void vge_vector2_muls(struct vge_vector2* dst, float scalar);
-float vge_vector2_cross(struct vge_vector2* restrict v1,
-	struct vge_vector2* restrict v2);
-float vge_vector2_dot(struct vge_vector2* restrict v1,
-	struct vge_vector2* restrict v2);
-float vge_vector2_lensqr(struct vge_vector2* v);
-float vge_vector2_len(struct vge_vector2* v);
+float vge_vector2_cross(const struct vge_vector2* restrict v1,
+	const struct vge_vector2* restrict v2);
+float vge_vector2_dot(const struct vge_vector2* restrict v1,
+	const struct vge_vector2* restrict v2);
+float vge_vector2_lensqr(const struct vge_vector2* v);
+float vge_vector2_len(const struct vge_vector2* v);
 float vge_vector2_normalize(struct vge_vector2* v);
 float vge_vector2_normalized(struct vge_vector2* restrict dst,
-	struct vge_vector2* restrict v);
+	const struct vge_vector2* restrict src);
+
+int vge_vector2_read(struct vge_vector2* dst, const char* data);
 
 #endif /* _VGE_VECTOR_H_ */

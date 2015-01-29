@@ -13,24 +13,15 @@
 	You should have received a copy of the GNU General Public License
 	along with Vintage Game Engine.  If not, see <http://www.gnu.org/licenses/>.
 */
-#ifndef _VGE_RESOURCE_H_
+#ifndef _VGE_PREFAB_H_
+#include "resource.h"
+#include "../scene/transform.h"
 
-#define VGERESOURCE_NAME_MAX 32
-enum vge_resource_type
+struct vge_prefab
 {
-	vge_resource_type_prefab
+	struct vge_resource resource;
+	struct vge_transform transform;
 };
 struct vge_resource_loader;
-
-/*
-	All of those fields are filled by the resource manager.
-	New resources should have vge_resource as their first field.
- */
-struct vge_resource
-{
-	char name[VGERESOURCE_NAME_MAX];
-	struct vge_resource* next;
-	struct vge_resource_loader* loader;
-};
-
-#endif /* _VGE_RESOURCE_H_ */
+struct vge_resource_loader* vge_prefab_get_loader();
+#endif /* _VGE_PREFAB_H_ */

@@ -72,6 +72,7 @@ struct vge_resource* vge_resource_manager_loadresource(
 	struct vge_resource_manager* rman, const char* relativePath)
 {
 	char* extension;
+	char* name;
 	struct vge_resource_loader* loader;
 	struct vge_resource* res;
 	extension = strrchr(relativePath, '.');
@@ -88,6 +89,9 @@ struct vge_resource* vge_resource_manager_loadresource(
 	res = loader->load(relativePath);
 	if(res == NULL)
 		return NULL;
+	name = strrchr(relativePath, '/') + 1;
+	strcpy(res->name, name);
+	printf("Loaded resource %s with name %s\n", extension, name);
 	res->next = rman->resource;
 	rman->resource = res;
 	return res;
