@@ -19,6 +19,7 @@
 #include "core/gamestate/gamestate.h"
 #include "core/game.h"
 #include "core/container/container.h"
+#include "core/container/rbtree.h"
 #include "renderer/renderer.h"
 #include "input/keycodes.h"
 #include "input/input.h"
