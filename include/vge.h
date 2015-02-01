@@ -14,7 +14,7 @@
 	along with Vintage Game Engine.  If not, see <http://www.gnu.org/licenses/>.
 */
 #ifndef _VGE_H_
-
+#define _VGE_H_
 /*
 	These typedefs are to be used in internal structures,
 	User functions should always use proper syntax instead.

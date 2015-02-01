@@ -30,7 +30,7 @@ int vge_renderer_init(struct vge_renderer* renderer, struct vge_window_propertie
 		window_properties?window_properties->pos_y:SDL_WINDOWPOS_CENTERED,
 		window_properties?window_properties->width:640,
 		window_properties?window_properties->height:640,
-		SDL_WINDOW_SHOWN | SDL_WINDOW_OPENGL);
+		SDL_WINDOW_OPENGL);
 	if(!renderer->sdl_window)
 	{
 		fprintf(stderr, "SDL_CreateWindow Error: %s\n", SDL_GetError());
@@ -38,8 +38,8 @@ int vge_renderer_init(struct vge_renderer* renderer, struct vge_window_propertie
 		return -1;
 	}
 
-	SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, 3);
-	SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, 2);
+	SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, 4);
+	SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, 4);
 	SDL_GL_SetAttribute(SDL_GL_DOUBLEBUFFER, 1);
 	SDL_GL_SetAttribute(SDL_GL_RED_SIZE, 8);
 	SDL_GL_SetAttribute(SDL_GL_GREEN_SIZE, 8);
@@ -63,11 +63,9 @@ int vge_renderer_init(struct vge_renderer* renderer, struct vge_window_propertie
 		fprintf(stderr, "OpenGL Error\n");
 		return -1;
 	}
-
 	//Initialize Modelview Matrix
 	glMatrixMode( GL_MODELVIEW );
 	glLoadIdentity();
-
 	return 0;
 }
 

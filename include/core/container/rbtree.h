@@ -13,7 +13,8 @@
 	You should have received a copy of the GNU General Public License
 	along with Vintage Game Engine.  If not, see <http://www.gnu.org/licenses/>.
 
-	This implementation was inspired by the implementation in Linux Kernel 3.18.1
+	This implementation was inspired by/based on the rbtree implementation in 
+	Linux Kernel 3.18.1.
 	Thanks to Rob Landley <rob@landley.net> for documentation,
 		(C) 1999  Andrea Arcangeli <andrea@suse.de>
 		(C) 2002  David Woodhouse <dwmw2@infradead.org>

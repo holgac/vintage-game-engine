@@ -13,23 +13,20 @@
 	You should have received a copy of the GNU General Public License
 	along with Vintage Game Engine.  If not, see <http://www.gnu.org/licenses/>.
 */
-#ifndef _VGE_RESOURCE_H_
+#ifndef _VGE_VERTEX_H_
+#define _VGE_VERTEX_H_
+#include "vector.h"
 
-#define VGERESOURCE_NAME_MAX 32
-
-struct vge_resource_loader;
-/*
-	All of those fields are filled by the resource manager.
-	New resources should have vge_resource as their first field.
- */
-struct vge_resource
+struct vge_vertex
 {
-	char name[VGERESOURCE_NAME_MAX];
-	/*
-		TODO: rbtree
-	 */
-	struct vge_resource* next;
-	struct vge_resource_loader* loader;
+	struct vge_vector2 position;
+	struct vge_vector2 texcoord;
+	struct vge_vector2 color;
 };
 
-#endif /* _VGE_RESOURCE_H_ */
+struct nx_json;
+int vge_vertex_read(struct vge_vertex* dst, const struct nx_json* json);
+void vge_vertex_clone(struct vge_vertex* restrict dst,
+	const struct vge_vertex* restrict src);
+
+#endif /* _VGE_VERTEX_H_ */

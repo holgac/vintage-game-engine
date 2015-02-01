@@ -24,11 +24,14 @@ struct nx_json;
 struct vge_component_loader
 {
 	char name[VGECOMPONENT_NAME_MAX];
+	/*
+		TODO: implement as rbtree
+	 */
 	struct vge_component_loader* next;
 	struct vge_component* (*load)(const struct nx_json* json);
-	struct vge_component* (*clone)(struct vge_component* res,
-		struct vge_component_manager* rman);
-	void (*unload)(struct vge_component* res);
+	struct vge_component* (*clone)(struct vge_component* comp,
+		struct vge_component_manager* cman);
+	void (*unload)(struct vge_component* comp);
 };
 
 struct vge_component_manager

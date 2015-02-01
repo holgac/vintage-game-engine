@@ -2,17 +2,17 @@ CC=gcc
 
 LDLIBS = -lSDL2 -framework OpenGL
 
-DEBUG=false
+DEBUG=true
 INCLUDEDIR=./include
 SRCDIR=./
-CFLAGS=-c -I$(INCLUDEDIR) -g -Wall -pedantic-errors
+CFLAGS=-c -I$(INCLUDEDIR) -Wall -pedantic-errors
 OPT=-Wall
 SOURCES=$(shell find $(SRCDIR) -name "*.c")
 OBJECTS=$(SOURCES:%.c=%.o)
 TARGET=vge
 
-ifneq ($(DEBUG),false)
-OPT+=-g
+ifeq ($(DEBUG),true)
+CFLAGS+=-g
 endif
 
 .PHONY: all

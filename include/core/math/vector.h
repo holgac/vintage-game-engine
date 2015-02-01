@@ -23,6 +23,7 @@ struct vge_vector2
 	TODO: Documentation
 	TODO: inline
  */
+void vge_vector2_set(struct vge_vector2* dst, float x, float y);
 void vge_vector2_identity(struct vge_vector2* dst);
 void vge_vector2_clone(struct vge_vector2* restrict dst, 
 	const struct vge_vector2* restrict src);

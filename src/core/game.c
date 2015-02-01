@@ -70,7 +70,6 @@ int vge_game_init(struct vge_game* game, char** argv, char** envp, char* resourc
 	vge_resource_manager_init(game->rman);
 	vge_resource_manager_registerloader(game->rman, vge_prefab_get_loader());
 	vge_resource_manager_loadrecursive(game->rman, resourcedir);
-
 	return 0;
 }
 
@@ -108,7 +107,7 @@ void vge_game_start(struct vge_game* game)
 				vge_input_keyevent(game->input, sdl_event.key.keysym.sym, 0);
 				break;
 			case SDL_QUIT:
-				game->status |= VGEGAME_STATUS_QUITTING;
+				vge_game_stop(game);
 				break;
 			}
 		}
@@ -128,4 +127,8 @@ void vge_game_destroy(struct vge_game* game)
 		game->input = NULL;
 	}
 	SDL_Quit();
+}
+void vge_game_stop(struct vge_game* game)
+{
+	game->status |= VGEGAME_STATUS_QUITTING;
 }

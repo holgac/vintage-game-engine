@@ -14,7 +14,7 @@
 	along with Vintage Game Engine.  If not, see <http://www.gnu.org/licenses/>.
 */
 #include <sys/types.h>
-#include <core/timer.h>
+#include <core/time/timer.h>
 #include <mach/clock.h>
 #include <mach/mach.h>
 /*
@@ -58,4 +58,38 @@ int vge_timer_check(struct vge_timer* timer, int flags)
 void vge_timer_update()
 {
 	_vge_cur_time = vge_timer_cur_time();
+}
+
+void vge_stopwatch_init(struct vge_stopwatch* stopwatch)
+{
+	stopwatch->start_time = _vge_cur_time;
+	stopwatch->is_running = 1;
+}
+float vge_stopwatch_elapsed(struct vge_stopwatch* stopwatch)
+{
+	if(stopwatch->is_running)
+		return _vge_cur_time - stopwatch->start_time;
+	return stopwatch->start_time;
+
+}
+/*
+	Pauses stopwatch
+ */
+void vge_stopwatch_pause(struct vge_stopwatch* stopwatch)
+{
+	/*
+		TODO: assert(is_running)
+	 */
+	stopwatch->start_time = vge_stopwatch_elapsed(stopwatch);
+	stopwatch->is_running = 0;
+}
+/*
+	Resumes stopwatch
+ */
+void vge_stopwatch_resume(struct vge_stopwatch* stopwatch)
+{
+	/*
+		TODO: assert(!is_running)
+	 */
+	stopwatch->start_time = _vge_cur_time - stopwatch->start_time;
 }

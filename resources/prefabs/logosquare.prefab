@@ -5,10 +5,22 @@
 		{
 			"type": "graphics_component",
 			"vertices":[
-				"-1 -1",
-				"1 -1",
-				"1 1",
-				"-1 1"
+				{
+					"position": "-1 -1",
+					"texcoord": "0 0"
+				},
+				{
+					"position": "1 -1",
+					"texcoord": "1 0"
+				},
+				{
+					"position": "1 1",
+					"texcoord": "1 1"
+				},
+				{
+					"position": "-1 1",
+					"texcoord": "0 1"
+				}
 			]
 		}
 	]

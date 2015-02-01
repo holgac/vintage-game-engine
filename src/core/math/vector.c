@@ -17,6 +17,12 @@
 #include <stdio.h>
 #include <core/math/vector.h>
 
+void vge_vector2_set(struct vge_vector2* dst, float x, float y)
+{
+	dst->x = x;
+	dst->y = y;
+}
+
 void vge_vector2_identity(struct vge_vector2* dst)
 {
 	dst->x = dst->y = 0;

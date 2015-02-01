@@ -24,10 +24,19 @@ struct vge_timer
 	float period;
 };
 
+struct vge_stopwatch
+{
+	int is_running;
+	/*
+		Stores start time if running, elapsed time otherwise.
+	 */
+	float start_time;
+};
+
 /*
-	Initializes timer. vge_timer_check will return 0 until
+	Initializes frame based timer. vge_timer_check will return 0 until
 	the time provided (in seconds).
-	A timer can be initialized many times
+	A timer can be initialized many times.
  */
 void vge_timer_init(struct vge_timer* timer, float period);
 /*
@@ -47,7 +56,25 @@ void vge_timer_update();
 	Returns current time in seconds.
 	The absolute value may not be meaningful, using time differences
 	is clearly a better idea.
+	Returns current time, not frame start time.
  */
 float vge_timer_cur_time();
+/*
+	Starts frame based stopwatch.
+	A stopwatch can be initialized many times
+ */
+void vge_stopwatch_init(struct vge_stopwatch* stopwatch);
+/*
+	Returns time elapsed until last init call
+ */
+float vge_stopwatch_elapsed(struct vge_stopwatch* stopwatch);
+/*
+	Pauses stopwatch
+ */
+void vge_stopwatch_pause(struct vge_stopwatch* stopwatch);
+/*
+	Resumes stopwatch
+ */
+void vge_stopwatch_resume(struct vge_stopwatch* stopwatch);
 
 #endif /* _VGE_TIMER_H_ */

@@ -1,5 +1,5 @@
 #ifndef _VGE_GAME_H_
-#include "timer.h"
+#include "time/timer.h"
 #define VGEGAME_INIT_RENDERER 1
 #define VGEGAME_INIT_INPUT 2
 
@@ -33,14 +33,19 @@ struct vge_game
  */
 int vge_game_init(struct vge_game* game, char** argv, char** envp, char* resourcedir, unsigned int flags);
 /*
-	Starts game loop
- */
-void vge_game_start(struct vge_game* game);
-/*
 	Destroys the game and all modules. The user does NOT need to call
 	vge_[module]_destroy for each module since this function destroys
 	all modules.
  */
 void vge_game_destroy(struct vge_game* game);
+/*
+	Starts game loop
+ */
+void vge_game_start(struct vge_game* game);
+/*
+	Stops game loop after handling current frame
+ */
+void vge_game_stop(struct vge_game* game);
+
 
 #endif /* _VGE_GAME_H_ */
