@@ -23,17 +23,17 @@ struct vge_resource_loader
 {
 	char extension[VGERESOURCE_EXTENSION_MAX];
 	struct vge_resource_loader* next;
-	struct vge_resource* (*load)(const char* path);
+	struct vge_resource* (*load)(const char* path, struct vge_game* game);
 	struct vge_resource* (*clone)(struct vge_resource* res,
-		struct vge_resource_manager* rman);
-	void (*unload)(struct vge_resource* res);
+		struct vge_game* game);
+	void (*unload)(struct vge_resource* res, struct vge_game* game);
 };
-
 struct vge_resource_manager
 {
 	struct vge_resource* resource;
 	struct vge_resource_loader* loader;
 };
+struct vge_game;
 
 int vge_resource_manager_init(struct vge_resource_manager* rman);
 void vge_resource_manager_purge(struct vge_resource_manager* rman);
@@ -42,9 +42,10 @@ void vge_resource_manager_destroy(struct vge_resource_manager* rman);
 struct vge_resource* vge_resource_manager_getresource(
 	struct vge_resource_manager* rman, const char* name);
 struct vge_resource* vge_resource_manager_loadresource(
-	struct vge_resource_manager* rman, const char* relativePath);
+	struct vge_resource_manager* rman, const char* relativePath,
+	struct vge_game* game);
 void vge_resource_manager_loadrecursive(struct vge_resource_manager* rman,
-										const char* path);
+									const char* path, struct vge_game* game);
 void vge_resource_manager_registerloader(struct vge_resource_manager* rman,
 										struct vge_resource_loader* loader);
 

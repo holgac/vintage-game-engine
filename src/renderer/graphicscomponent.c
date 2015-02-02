@@ -68,9 +68,9 @@ struct vge_component_loader* vge_graphicscomponent_get_loader()
 {
 	struct vge_component_loader* loader;
 	loader = malloc(sizeof(struct vge_component_loader));
-	strcpy(loader->name, "graphics_component");
 	loader->load = _load_component;
 	loader->clone = _clone_component;
 	loader->unload = _unload_component;
+	strcpy(loader->name, "graphics_component");
 	return loader;
 }

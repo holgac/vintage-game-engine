@@ -14,6 +14,7 @@
 	along with Vintage Game Engine.  If not, see <http://www.gnu.org/licenses/>.
 */
 #include <string.h>
+#include <stdio.h>
 #include <external/nxjson/nxjson.h>
 #include <core/scene/componentmanager.h>
 
@@ -49,6 +50,7 @@ struct vge_component* vge_component_manager_loadcomponent(
 	loader = _find_loader(cman, elem->text_value);
 	if(!loader)
 		return NULL;
+	printf("Loading component %s\n", elem->text_value);
 	return loader->load(json);
 }
 void vge_component_manager_registerloader(struct vge_component_manager* cman,

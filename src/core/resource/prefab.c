@@ -16,11 +16,14 @@
 #include <stdlib.h>
 #include <string.h>
 #include <stdio.h>
+#include <core/game.h>
 #include <core/resource/prefab.h>
+#include <core/scene/component.h>
+#include <core/scene/componentmanager.h>
 #include <core/resource/resourcemanager.h>
 #include <external/nxjson/nxjson.h>
 
-static struct vge_resource* _load_prefab(const char* path)
+static struct vge_resource* _load_prefab(const char* path, struct vge_game* game)
 {
 	const nx_json* json;
 	const nx_json* elem;
@@ -36,21 +39,37 @@ static struct vge_resource* _load_prefab(const char* path)
 	fread(buf, flen, 1, f);
 	json = nx_json_parse(buf, 0);
 	prefab = malloc(sizeof(struct vge_prefab));
+	prefab->component = NULL;
 	vge_transform_read(&prefab->transform, json);
 	elem = nx_json_get(json, "components");
+	if(elem)
+	{
+		const nx_json* celem;
+		const nx_json* telem;
+		celem = elem->child;
+		while(celem)
+		{
+			telem = nx_json_get(celem, "type");
+			struct vge_component* comp =
+				vge_component_manager_loadcomponent(game->cman, celem);
+			comp->next = prefab->component;
+			prefab->component = comp;
+			celem = celem->next;
+		}
+	}
 	/*
 		TODO: parse components
 	 */
 	return (struct vge_resource*)prefab;
 }
 
-static void _unload_prefab(struct vge_resource* res)
+static void _unload_prefab(struct vge_resource* res, struct vge_game* game)
 {
 	free(res);
 }
 
 static struct vge_resource* _clone_prefab(struct vge_resource* res,
-	struct vge_resource_manager* rman)
+	struct vge_game* game)
 {
 	struct vge_prefab* orig;
 	struct vge_prefab* new;

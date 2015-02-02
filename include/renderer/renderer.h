@@ -33,8 +33,8 @@ struct vge_renderer
 	SDL_GLContext sdl_glcontext;
 	SDL_Renderer* sdl_renderer;
 };
-
-int vge_renderer_init(struct vge_renderer* renderer, struct vge_window_properties* window_properties);
+struct vge_game;
+int vge_renderer_init(struct vge_game* game, struct vge_window_properties* window_properties);
 void vge_renderer_destroy(struct vge_renderer* renderer);
 
 void vge_renderer_onframe(struct vge_renderer* renderer);

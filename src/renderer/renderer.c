@@ -17,13 +17,17 @@
 #include <stdio.h>
 #include <SDL2/SDL.h>
 #include <renderer/renderer.h>
+#include <renderer/graphicscomponent.h>
+#include <core/scene/componentmanager.h>
 #include <core/game.h>
 
 
-int vge_renderer_init(struct vge_renderer* renderer, struct vge_window_properties* window_properties)
+int vge_renderer_init(struct vge_game* game, struct vge_window_properties* window_properties)
 {
+	struct vge_renderer* renderer;
 	GLenum gl_error;
 
+	renderer = game->renderer;
 	renderer->sdl_window = SDL_CreateWindow(
 		window_properties?window_properties->window_title:"vge test",
 		window_properties?window_properties->pos_x:SDL_WINDOWPOS_CENTERED,
@@ -66,12 +70,15 @@ int vge_renderer_init(struct vge_renderer* renderer, struct vge_window_propertie
 	//Initialize Modelview Matrix
 	glMatrixMode( GL_MODELVIEW );
 	glLoadIdentity();
+
+	vge_component_manager_registerloader(game->cman,
+		vge_graphicscomponent_get_loader());
+
 	return 0;
 }
 
 void vge_renderer_onframe(struct vge_renderer* renderer)
 {
-	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 	glBegin( GL_QUADS );
 	glVertex2f( -0.5f, -0.5f );
 	glVertex2f( 0.5f, -0.5f );
@@ -79,6 +86,7 @@ void vge_renderer_onframe(struct vge_renderer* renderer)
 	glVertex2f( -0.5f, 0.5f );
 	glEnd();
 	SDL_GL_SwapWindow(renderer->sdl_window);
+	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 }
 
 void vge_renderer_destroy(struct vge_renderer* renderer)

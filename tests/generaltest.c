@@ -44,7 +44,7 @@ int main(int argc, char** argv, char** envp)
 	game.state = &state;
 	state.onframe_cb = onframe_cb;
 	state.onstep_cb = onstep_cb;
-	vge_renderer_init(game.renderer, NULL);
+	vge_renderer_init(&game, NULL);
 	vge_timer_update();
 	printf("vge_renderer_init: %3.4f\n", vge_stopwatch_elapsed(&sw));
 	vge_input_init(game.input);

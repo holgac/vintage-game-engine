@@ -21,6 +21,7 @@
 #include <string.h>
 #include <stdio.h>
 #include <limits.h>
+#include <core/game.h>
 #include <core/resource/resourcemanager.h>
 #include <core/resource/resource.h>
 
@@ -69,7 +70,8 @@ struct vge_resource* vge_resource_manager_getresource(
 	return NULL;
 }
 struct vge_resource* vge_resource_manager_loadresource(
-	struct vge_resource_manager* rman, const char* relativePath)
+	struct vge_resource_manager* rman, const char* relativePath,
+	struct vge_game* game)
 {
 	char* extension;
 	char* name;
@@ -86,7 +88,7 @@ struct vge_resource* vge_resource_manager_loadresource(
 	loader = _find_loader(rman, extension);
 	if(loader == NULL)
 		return NULL;
-	res = loader->load(relativePath);
+	res = loader->load(relativePath, game);
 	if(res == NULL)
 		return NULL;
 	name = strrchr(relativePath, '/') + 1;
@@ -97,7 +99,8 @@ struct vge_resource* vge_resource_manager_loadresource(
 	return res;
 }
 void vge_resource_manager_loadrecursive(
-	struct vge_resource_manager* rman, const char* path)
+	struct vge_resource_manager* rman, const char* path,
+	struct vge_game* game)
 {
 	/*
 		TODO: UNIX specific code
@@ -116,11 +119,11 @@ void vge_resource_manager_loadrecursive(
 		stat(entpath, &st);
 		if(S_ISDIR(st.st_mode) && ent->d_name[0] != '.')
 		{
-			vge_resource_manager_loadrecursive(rman, entpath);
+			vge_resource_manager_loadrecursive(rman, entpath, game);
 		}
 		else if(S_ISREG(st.st_mode) && ent->d_name[0] != '.')
 		{
-			vge_resource_manager_loadresource(rman, entpath);
+			vge_resource_manager_loadresource(rman, entpath, game);
 		}
 	}
 	closedir(dir);

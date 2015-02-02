@@ -20,6 +20,7 @@ struct vge_game
 	struct vge_renderer* renderer;
 	struct vge_input* input;
 	struct vge_resource_manager* rman;
+	struct vge_component_manager* cman;
 
 	struct vge_timer step_timer;
 	float step_frequency;

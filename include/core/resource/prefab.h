@@ -16,12 +16,19 @@
 #ifndef _VGE_PREFAB_H_
 #include "resource.h"
 #include "../scene/transform.h"
+struct vge_component;
 
 struct vge_prefab
 {
 	struct vge_resource resource;
 	struct vge_transform transform;
+	/*
+		TODO: rbtree
+	 */
+	struct vge_component* component;
 };
+
 struct vge_resource_loader;
 struct vge_resource_loader* vge_prefab_get_loader();
+
 #endif /* _VGE_PREFAB_H_ */
