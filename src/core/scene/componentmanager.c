@@ -17,6 +17,7 @@
 #include <stdio.h>
 #include <external/nxjson/nxjson.h>
 #include <core/scene/componentmanager.h>
+#include <core/scene/component.h>
 
 static struct vge_component_loader* _find_loader(
 	struct vge_component_manager* cman, const char* name)
@@ -46,12 +47,15 @@ struct vge_component* vge_component_manager_loadcomponent(
 {
 	const struct nx_json* elem;
 	struct vge_component_loader* loader;
+	struct vge_component* comp;
 	elem = nx_json_get(json, "type");
 	loader = _find_loader(cman, elem->text_value);
 	if(!loader)
 		return NULL;
 	printf("Loading component %s\n", elem->text_value);
-	return loader->load(json);
+	comp = loader->load(json);
+	comp->loader = loader;
+	return comp;
 }
 void vge_component_manager_registerloader(struct vge_component_manager* cman,
 										struct vge_component_loader* loader)

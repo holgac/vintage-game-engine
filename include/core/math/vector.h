@@ -14,6 +14,7 @@
 	along with Vintage Game Engine.  If not, see <http://www.gnu.org/licenses/>.
 */
 #ifndef _VGE_VECTOR_H_
+#define _VGE_VECTOR_H_
 
 struct vge_vector2
 {

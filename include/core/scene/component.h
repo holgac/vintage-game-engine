@@ -14,10 +14,12 @@
 	along with Vintage Game Engine.  If not, see <http://www.gnu.org/licenses/>.
 */
 #ifndef _VGE_COMPONENT_H_
+struct vge_component_loader;
 
 struct vge_component
 {
 	struct vge_component* next;
+	struct vge_component_loader* loader;
 };
 
 #endif /* _VGE_COMPONENT_H_ */

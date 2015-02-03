@@ -20,6 +20,7 @@
 #include <core/resource/prefab.h>
 #include <core/scene/component.h>
 #include <core/scene/componentmanager.h>
+#include <core/scene/entity.h>
 #include <core/resource/resourcemanager.h>
 #include <external/nxjson/nxjson.h>
 
@@ -87,4 +88,24 @@ struct vge_resource_loader* vge_prefab_get_loader()
 	loader->unload = _unload_prefab;
 	strcpy(loader->extension, "prefab");
 	return loader;
+}
+
+struct vge_entity* vge_prefab_create_entity(struct vge_prefab* prefab, struct vge_game* game)
+{
+	struct vge_entity* ent;
+	struct vge_component* comp;
+	ent = malloc(sizeof(struct vge_entity));
+	ent->next = NULL;
+	ent->component = NULL;
+	ent->prefab = prefab;
+	vge_transform_clone(&ent->transform, &prefab->transform);
+	comp = prefab->component;
+	while(comp)
+	{
+		struct vge_component* comp_clone = comp->loader->clone(comp, game->cman);
+		comp_clone->next = ent->component;
+		ent->component = comp_clone;
+		comp = comp->next;
+	}
+	return ent;
 }

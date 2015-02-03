@@ -15,8 +15,12 @@
 */
 #include <stdlib.h>
 #include <string.h>
+#include <SDL2/SDL.h>
+#include <SDL2/SDL_opengl.h>
 #include <renderer/graphicscomponent.h>
+#include <core/scene/entity.h>
 #include <core/scene/componentmanager.h>
+#include <core/game.h>
 #include <external/nxjson/nxjson.h>
 
 static struct vge_component* _load_component(const struct nx_json* json)
@@ -38,6 +42,7 @@ static struct vge_component* _load_component(const struct nx_json* json)
 	{
 		vge_vertex_read(comp->vertices + i, velem);
 		velem = velem->next;
+		++i;
 	}
 	return (struct vge_component*)comp;
 }
@@ -55,6 +60,7 @@ static struct vge_component* _clone_component(struct vge_component* srccomp,
 	{
 		vge_vertex_clone(comp->vertices + i, src->vertices + i);
 	}
+	comp->component.loader = srccomp->loader;
 	return (struct vge_component*)comp;
 }
 static void _unload_component(struct vge_component* comp)
@@ -64,6 +70,26 @@ static void _unload_component(struct vge_component* comp)
 	free(gcomp);
 }
 
+static void _on_frame(struct vge_component* comp, struct vge_entity* entity, 
+	struct vge_game* game)
+{
+	struct vge_graphicscomponent* gcomp = (struct vge_graphicscomponent*)comp;
+	u32 i;
+	glPushMatrix();
+	// glTranslatef(entity->transform.position.x, 
+	// 	entity->transform.position.y,
+	// 	0);
+	// glRotatef(entity->transform.rotation, 0.0f, 0.0f, 1.0f);
+	glBegin(GL_TRIANGLE_FAN);
+	for(i=0; i<gcomp->num_vertices; ++i)
+	{
+		struct vge_vertex* vertex = gcomp->vertices + i;
+		glVertex2f(vertex->position.x,vertex->position.y);
+	}
+	glEnd();
+	glPopMatrix();
+}
+
 struct vge_component_loader* vge_graphicscomponent_get_loader()
 {
 	struct vge_component_loader* loader;
@@ -71,6 +97,8 @@ struct vge_component_loader* vge_graphicscomponent_get_loader()
 	loader->load = _load_component;
 	loader->clone = _clone_component;
 	loader->unload = _unload_component;
+	loader->on_frame = _on_frame;
+	loader->on_step = NULL;
 	strcpy(loader->name, "graphics_component");
 	return loader;
 }

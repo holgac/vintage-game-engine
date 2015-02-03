@@ -20,6 +20,7 @@
 #include <core/resource/resourcemanager.h>
 #include <core/resource/prefab.h>
 #include <core/scene/componentmanager.h>
+#include <core/scene/scene.h>
 #include <renderer/renderer.h>
 #include <input/input.h>
 
@@ -86,6 +87,7 @@ void vge_game_start(struct vge_game* game)
 		if(vge_timer_check(&game->step_timer, VGETIMER_REWIND))
 		{
 			game->state->onstep_cb(game);
+			vge_scene_on_step(game->state->scene, game);
 		}
 		game->state->onframe_cb(game);
 		if(game->renderer)
@@ -96,6 +98,7 @@ void vge_game_start(struct vge_game* game)
 		{
 			vge_input_onframe(game->input);
 		}
+		vge_scene_on_frame(game->state->scene, game);
 		SDL_PumpEvents();
 		while(SDL_PollEvent(&sdl_event))
 		{

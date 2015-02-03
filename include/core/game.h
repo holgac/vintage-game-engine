@@ -5,6 +5,7 @@
 
 #define VGEGAME_STATUS_QUITTING 1
 struct vge_game_state;
+struct vge_game_state_manager;
 struct vge_renderer;
 struct vge_input;
 /*
@@ -21,6 +22,7 @@ struct vge_game
 	struct vge_input* input;
 	struct vge_resource_manager* rman;
 	struct vge_component_manager* cman;
+	struct vge_game_state_manager* gsman;
 
 	struct vge_timer step_timer;
 	float step_frequency;

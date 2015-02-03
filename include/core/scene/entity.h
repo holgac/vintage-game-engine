@@ -14,12 +14,15 @@
 	along with Vintage Game Engine.  If not, see <http://www.gnu.org/licenses/>.
 */
 #ifndef _VGE_ENTITY_H_
-
+#include "transform.h"
 struct vge_component;
+struct vge_prefab;
 struct vge_entity
 {
 	struct vge_entity* next;
 	struct vge_component* component;
+	struct vge_prefab* prefab;
+	struct vge_transform transform;
 };
 
 #endif /* _VGE_ENTITY_H_ */

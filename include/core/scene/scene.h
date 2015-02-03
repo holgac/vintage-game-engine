@@ -16,9 +16,17 @@
 #ifndef _VGE_SCENE_H_
 
 struct vge_entity;
+struct vge_game;
 struct vge_scene
 {
 	struct vge_entity* entity;
 };
 
+int vge_scene_init(struct vge_scene* scene);
+
+void vge_scene_on_frame(struct vge_scene* scene, struct vge_game* game);
+
+void vge_scene_on_step(struct vge_scene* scene, struct vge_game* game);
+
+void vge_scene_add_entity(struct vge_scene* scene, struct vge_entity* entity);
 #endif /* _VGE_SCENE_H_ */

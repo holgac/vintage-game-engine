@@ -14,6 +14,8 @@
 	along with Vintage Game Engine.  If not, see <http://www.gnu.org/licenses/>.
 */
 #ifndef _VGE_TRANSFORM_H_
+#define _VGE_TRANSFORM_H_
+
 #include "../math/vector.h"
 
 struct vge_transform

@@ -13,21 +13,18 @@
 	You should have received a copy of the GNU General Public License
 	along with Vintage Game Engine.  If not, see <http://www.gnu.org/licenses/>.
 */
-#ifndef _VGE_GAME_STATE_H_
+#ifndef _VGE_GAME_STATE_MANAGER_H_
 
-struct vge_scene;
-struct vge_game;
-#define VGE_GAMESTATE_NAME_MAX 32
-struct vge_game_state
+struct vge_game_state;
+struct vge_game_state_manager
 {
-	char name[VGE_GAMESTATE_NAME_MAX];
-	struct vge_scene* scene;
-	void (*init_cb)(struct vge_game*);
-	void (*destroy_cb)(struct vge_game*);
-	void (*onframe_cb)(struct vge_game*);
-	void (*onstep_cb)(struct vge_game*);
-	struct vge_game_state* next;
+	struct vge_game_state* state;
 };
 
-int vge_game_state_init(struct vge_game_state* state);
+int vge_game_state_manager_init(struct vge_game_state_manager* gsman);
+void vge_game_state_manager_destroy(struct vge_game_state_manager* gsman);
+int vge_game_state_manager_registerstate(struct vge_game_state_manager* gsman,
+	struct vge_game_state* state);
+struct vge_game_state* vge_game_state_manager_getstate(
+	struct vge_game_state_manager* gsman, const char* name);
 #endif /* _VGE_GAME_STATE_H_ */

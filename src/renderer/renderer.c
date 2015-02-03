@@ -79,12 +79,6 @@ int vge_renderer_init(struct vge_game* game, struct vge_window_properties* windo
 
 void vge_renderer_onframe(struct vge_renderer* renderer)
 {
-	glBegin( GL_QUADS );
-	glVertex2f( -0.5f, -0.5f );
-	glVertex2f( 0.5f, -0.5f );
-	glVertex2f( 0.5f, 0.5f );
-	glVertex2f( -0.5f, 0.5f );
-	glEnd();
 	SDL_GL_SwapWindow(renderer->sdl_window);
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 }

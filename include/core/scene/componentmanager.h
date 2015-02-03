@@ -20,6 +20,8 @@
 struct vge_component;
 struct vge_component_manager;
 struct nx_json;
+struct vge_game;
+struct vge_entity;
 
 struct vge_component_loader
 {
@@ -32,6 +34,10 @@ struct vge_component_loader
 	struct vge_component* (*clone)(struct vge_component* comp,
 		struct vge_component_manager* cman);
 	void (*unload)(struct vge_component* comp);
+	void (*on_frame)(struct vge_component* comp, struct vge_entity* entity,
+		struct vge_game* game);
+	void (*on_step)(struct vge_component* comp, struct vge_entity* entity,
+		struct vge_game* game);
 };
 
 struct vge_component_manager

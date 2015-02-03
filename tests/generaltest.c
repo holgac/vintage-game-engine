@@ -31,6 +31,18 @@ void onstep_cb(struct vge_game* game)
 {
 }
 
+void init_cb(struct vge_game* game)
+{
+	struct vge_scene* scene;
+	struct vge_prefab* prefab;
+	struct vge_entity* entity;
+	scene = game->state->scene;
+	prefab = (struct vge_prefab*)vge_resource_manager_getresource(game->rman,
+		"logosquare.prefab");
+	entity = vge_prefab_create_entity(prefab, game);
+	vge_scene_add_entity(scene, entity);
+}
+
 int main(int argc, char** argv, char** envp)
 {
 	struct vge_game game;
@@ -41,9 +53,6 @@ int main(int argc, char** argv, char** envp)
 	vge_game_init(&game, argv, envp, VGEGAME_INIT_RENDERER | VGEGAME_INIT_INPUT);
 	vge_timer_update();
 	printf("vge_game_init: %3.4f\n", vge_stopwatch_elapsed(&sw));
-	game.state = &state;
-	state.onframe_cb = onframe_cb;
-	state.onstep_cb = onstep_cb;
 	vge_renderer_init(&game, NULL);
 	vge_timer_update();
 	printf("vge_renderer_init: %3.4f\n", vge_stopwatch_elapsed(&sw));
@@ -51,6 +60,15 @@ int main(int argc, char** argv, char** envp)
 	vge_timer_update();
 	printf("vge_input_init: %3.4f\n", vge_stopwatch_elapsed(&sw));
 	vge_resource_manager_loadrecursive(game.rman, "./resources", &game);
+	vge_game_state_init(&state);
+	state.onframe_cb = onframe_cb;
+	state.onstep_cb = onstep_cb;
+	state.init_cb = init_cb;
+	game.state = &state;
+	/*
+		TODO: call state.init_cb via vge_game_set_state
+	 */
+	state.init_cb(&game);
 	vge_game_start(&game);
 	
 	return 0;

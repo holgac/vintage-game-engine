@@ -29,6 +29,10 @@ struct vge_prefab
 };
 
 struct vge_resource_loader;
+struct vge_entity;
+struct vge_game;
+
 struct vge_resource_loader* vge_prefab_get_loader();
+struct vge_entity* vge_prefab_create_entity(struct vge_prefab* prefab, struct vge_game* game);
 
 #endif /* _VGE_PREFAB_H_ */
