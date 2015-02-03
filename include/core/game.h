@@ -32,7 +32,7 @@ struct vge_game
 	Initializes vge_game. specify which modules to use via flags.
 	modules must also be initialized separately via vge_[module]_init.
  */
-int vge_game_init(struct vge_game* game, char** argv, char** envp, char* resourcedir, unsigned int flags);
+int vge_game_init(struct vge_game* game, char** argv, char** envp, unsigned int flags);
 /*
 	Destroys the game and all modules. The user does NOT need to call
 	vge_[module]_destroy for each module since this function destroys

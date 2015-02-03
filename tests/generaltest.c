@@ -38,7 +38,7 @@ int main(int argc, char** argv, char** envp)
 	struct vge_stopwatch sw;
 	vge_timer_update();
 	vge_stopwatch_init(&sw);
-	vge_game_init(&game, argv, envp, "./resources", VGEGAME_INIT_RENDERER | VGEGAME_INIT_INPUT);
+	vge_game_init(&game, argv, envp, VGEGAME_INIT_RENDERER | VGEGAME_INIT_INPUT);
 	vge_timer_update();
 	printf("vge_game_init: %3.4f\n", vge_stopwatch_elapsed(&sw));
 	game.state = &state;
@@ -50,6 +50,7 @@ int main(int argc, char** argv, char** envp)
 	vge_input_init(game.input);
 	vge_timer_update();
 	printf("vge_input_init: %3.4f\n", vge_stopwatch_elapsed(&sw));
+	vge_resource_manager_loadrecursive(game.rman, "./resources", &game);
 	vge_game_start(&game);
 	
 	return 0;

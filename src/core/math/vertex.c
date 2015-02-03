@@ -20,17 +20,17 @@ int vge_vertex_read(struct vge_vertex* dst, const struct nx_json* json)
 {
 	const nx_json* elem;
 	elem = nx_json_get(json, "position");
-	if(elem)
+	if(elem->type != NX_JSON_NULL)
 		vge_vector2_read(&dst->position, elem->text_value);
 	else
 		vge_vector2_identity(&dst->position);
 	elem = nx_json_get(json, "texcoord");
-	if(elem)
+	if(elem->type != NX_JSON_NULL)
 		vge_vector2_read(&dst->texcoord, elem->text_value);
 	else
 		vge_vector2_identity(&dst->texcoord);
 	elem = nx_json_get(json, "color");
-	if(elem)
+	if(elem->type != NX_JSON_NULL)
 		vge_vector2_read(&dst->color, elem->text_value);
 	else
 		vge_vector2_set(&dst->color, 1.0f, 1.0f);
