@@ -13,26 +13,29 @@
 	You should have received a copy of the GNU General Public License
 	along with Vintage Game Engine.  If not, see <http://www.gnu.org/licenses/>.
 */
-#ifndef _VGE_PREFAB_H_
-#include "resource.h"
-#include "../scene/transform.h"
-struct vge_component;
+#include "core/containers/list.h"
 
-struct vge_prefab
+
+void vge_list_init(struct vge_list *src)
 {
-	struct vge_resource resource;
-	struct vge_transform transform;
-	/*
-		TODO: rbtree
-	 */
-	struct vge_component* component;
-};
-
-struct vge_resource_loader;
-struct vge_entity;
-struct vge_game;
-
-struct vge_resource_loader* vge_prefab_get_loader();
-struct vge_entity* vge_prefab_create_entity(struct vge_prefab* prefab, struct vge_game* game);
-
-#endif /* _VGE_PREFAB_H_ */
+	src->next = src->prev = src;
+}
+void vge_list_add(struct vge_list *src, struct vge_list *target)
+{
+	target->prev = src;
+	target->next = src->next;
+	src->next->prev = target;
+	src->next = target;
+}
+void vge_list_remove(struct vge_list *target)
+{
+	target->prev->next = target->next;
+	target->next->prev = target->prev;
+}
+u32 vge_list_count(struct vge_list *src)
+{
+	struct vge_list *nd = src;
+	u32 cnt = 0;
+	while((nd = nd->next) != src) ++cnt;
+	return cnt;
+}

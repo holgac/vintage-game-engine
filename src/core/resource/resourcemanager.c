@@ -14,127 +14,54 @@
 	along with Vintage Game Engine.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#include <sys/types.h>
-#include <sys/stat.h>
-#include <dirent.h>
-#include <unistd.h>
-#include <string.h>
-#include <stdio.h>
-#include <limits.h>
-#include <core/game.h>
-#include <core/resource/resourcemanager.h>
-#include <core/resource/resource.h>
+#include "core/resource/resource.h"
+#include "core/resource/resourceloader.h"
+#include "core/resource/resourcemanager.h"
 
-static struct vge_resource_loader* _find_loader(
-	struct vge_resource_manager* rman, const char* ext)
+static int _resource_compare(struct vge_rbnode *lhs, struct vge_rbnode *rhs)
 {
-	struct vge_resource_loader* loader = rman->loader;
-	while(loader)
-	{
-		if(strcmp(ext, loader->extension) == 0)
-			return loader;
-		loader = loader->next;
-	}
-	return NULL;
+	struct vge_resource *l, *r;
+	l = vge_container_of(lhs, struct vge_resource, res_node);
+	r = vge_container_of(rhs, struct vge_resource, res_node);
+	return strcmp(l->name, r->name);
 }
 
-int vge_resource_manager_init(struct vge_resource_manager* rman)
+static int _resource_loader_compare(struct vge_rbnode *lhs, struct vge_rbnode *rhs)
 {
-	rman->resource = NULL;
-	rman->loader = NULL;
-	return 0;
-}
-void vge_resource_manager_purge(struct vge_resource_manager* rman)
-{
-
-}
-void vge_resource_manager_destroy(struct vge_resource_manager* rman)
-{
-
+	struct vge_resource_loader *l, *r;
+	l = vge_container_of(lhs, struct vge_resource_loader, res_node);
+	r = vge_container_of(rhs, struct vge_resource_loader, res_node);
+	return strcmp(l->name, r->name);
 }
 
-struct vge_resource* vge_resource_manager_getresource(
-	struct vge_resource_manager* rman, const char* name)
+static int _resource_match(struct vge_rbnode *lhs, const void *rhs)
 {
-	/*
-		TODO: store resources in rbtree
-	 */
-	struct vge_resource* res;
-	res = rman->resource;
-	while(res)
-	{
-		if(strcmp(name, res->name) == 0)
-			return res;
-		res = res->next;
-	}
-	return NULL;
+	struct vge_resource *l;
+	l = vge_container_of(lhs, struct vge_resource, res_node);
+	return strcmp(l->name, rhs);
 }
-struct vge_resource* vge_resource_manager_loadresource(
-	struct vge_resource_manager* rman, const char* relativePath,
-	struct vge_game* game)
+
+static int _resource_loader_match(struct vge_rbnode *lhs, const void *rhs)
 {
-	char* extension;
-	char* name;
-	struct vge_resource_loader* loader;
-	struct vge_resource* res;
-	extension = strrchr(relativePath, '.');
-	if(extension == NULL)
-	{
-		fprintf(stderr, "Cannot find extension of %s\n", relativePath);
+	struct vge_resource_loader *l;
+	l = vge_container_of(lhs, struct vge_resource_loader, res_node);
+	return strcmp(l->name, rhs);
+}
+
+void vge_resource_manager_init(struct vge_resource_manager *rman)
+{
+	vge_rbtree_init(&rman->resources, _resource_compare);
+	vge_rbtree_init(&rman->resource_loaders, _resource_loader_compare);
+}
+
+struct vge_resource *vge_resource_manager_getresource(
+		struct vge_resource_manager *rman, const char *name)
+{
+	struct vge_rbnode *n;
+	n = vge_rbtree_find_match(&rman->resources, name, _resource_match);
+	if(!n)
 		return NULL;
-	}
-	++extension;
-	printf("load resource(%s): %s\n", extension, relativePath);
-	loader = _find_loader(rman, extension);
-	if(loader == NULL)
-		return NULL;
-	res = loader->load(relativePath, game);
-	if(res == NULL)
-		return NULL;
-	name = strrchr(relativePath, '/') + 1;
-	strcpy(res->name, name);
-	printf("Loaded resource %s with name %s\n", extension, name);
-	res->next = rman->resource;
-	rman->resource = res;
-	return res;
-}
-void vge_resource_manager_loadrecursive(
-	struct vge_resource_manager* rman, const char* path,
-	struct vge_game* game)
-{
-	/*
-		TODO: UNIX specific code
-	 */
-	char entpath[PATH_MAX];
-	DIR* dir = opendir(path);
-	int pathlen = strlen(path);
-	struct dirent* ent;
-	printf("load recursive: %s\n", path);
-	strcpy(entpath, path);
-	entpath[pathlen] = '/';
-	while((ent = readdir(dir)))
-	{
-		struct stat st;
-		strcpy(entpath + pathlen + 1, ent->d_name);
-		stat(entpath, &st);
-		if(S_ISDIR(st.st_mode) && ent->d_name[0] != '.')
-		{
-			vge_resource_manager_loadrecursive(rman, entpath, game);
-		}
-		else if(S_ISREG(st.st_mode) && ent->d_name[0] != '.')
-		{
-			vge_resource_manager_loadresource(rman, entpath, game);
-		}
-	}
-	closedir(dir);
+	return vge_container_of(n, struct vge_resource, res_node);
 }
 
-void vge_resource_manager_registerloader(struct vge_resource_manager* rman,
-	struct vge_resource_loader* loader)
-{
-	/*
-		TODO: sanity checks
-	 */
-	loader->next = rman->loader;
-	rman->loader = loader;
-}
+

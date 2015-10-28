@@ -1,11 +1,11 @@
 CC=gcc
 
-LDLIBS = -lSDL2 -framework OpenGL
+LDLIBS = -lSDL2 -lGL
 
 DEBUG=true
 INCLUDEDIR=./include
 SRCDIR=./
-CFLAGS=-c -I$(INCLUDEDIR) -Wall -pedantic-errors
+CFLAGS=-c -I$(INCLUDEDIR) -Wall -g
 OPT=-Wall
 SOURCES=$(shell find $(SRCDIR) -name "*.c")
 OBJECTS=$(SOURCES:%.c=%.o)
@@ -19,6 +19,7 @@ endif
 all: $(TARGET)
 
 $(TARGET): $(OBJECTS)
+		./setup.py
 		$(CC) $^ -o $@ $(LDLIBS)
 
 .PHONY: clean

@@ -13,127 +13,94 @@
 	You should have received a copy of the GNU General Public License
 	along with Vintage Game Engine.  If not, see <http://www.gnu.org/licenses/>.
 */
-#include <time.h>
+
 #include <SDL2/SDL.h>
-#include <core/game.h>
-#include <core/gamestate/gamestate.h>
-#include <core/resource/resourcemanager.h>
-#include <core/resource/prefab.h>
-#include <core/scene/componentmanager.h>
-#include <core/scene/scene.h>
-#include <renderer/renderer.h>
-#include <input/input.h>
+#include "core/game.h"
+#include "core/subsystem.h"
 
-
-int vge_game_init(struct vge_game* game, char** argv, char** envp, unsigned int flags)
+int vge_game_init(struct vge_game *game)
 {
-	unsigned int sdl_init_flags = SDL_INIT_NOPARACHUTE;
+	vge_list_init(&game->subsystems);
+	SDL_Init(SDL_INIT_EVERYTHING);
 	game->status = 0;
-	game->state = NULL;
-	game->step_frequency = 1.0f / 60.0f;
-	if(flags & VGEGAME_INIT_INPUT)
-	{
-		if(!(flags & VGEGAME_INIT_RENDERER))
-		{
-			fprintf(stderr, "Cannot initialize input without renderer!\n");
-			return -1;
-		}
-		game->input = malloc(sizeof(struct vge_input));
-	}
-	else
-	{
-		game->input = NULL;
-	}
-	if(flags & VGEGAME_INIT_RENDERER)
-	{
-		sdl_init_flags |= SDL_INIT_VIDEO;
-		game->renderer = malloc(sizeof(struct vge_renderer));
-	}
-	else
-	{
-		game->renderer = NULL;
-	}
-	if (SDL_Init(sdl_init_flags) != 0)
-	{
-		fprintf(stderr, "SDL_Init Error: %s\n", SDL_GetError());
-		if(game->renderer)
-		{
-			free(game->renderer);
-			game->renderer = NULL;
-		}
-		if(game->input)
-		{
-			free(game->input);
-			game->input = NULL;
-		}
-		return -1;
-	}
-	game->cman = malloc(sizeof(struct vge_component_manager));
-	vge_component_manager_init(game->cman);
-	game->rman = malloc(sizeof(struct vge_resource_manager));
-	vge_resource_manager_init(game->rman);
-	vge_resource_manager_registerloader(game->rman, vge_prefab_get_loader());
 	return 0;
 }
 
-void vge_game_start(struct vge_game* game)
+int vge_game_add_subsystem(struct vge_game *game,
+		struct vge_subsystem *subsys)
 {
-	vge_timer_update();
-	vge_timer_init(&game->step_timer, game->step_frequency);
-	while(!(game->status & VGEGAME_STATUS_QUITTING))
-	{
-		SDL_Event sdl_event;
-		vge_timer_update();
-		if(vge_timer_check(&game->step_timer, VGETIMER_REWIND))
-		{
-			game->state->onstep_cb(game);
-			vge_scene_on_step(game->state->scene, game);
+	vge_list_add(&game->subsystems, &subsys->subsys_list);
+	subsys->init(game, subsys);
+	return 0;
+}
+
+struct vge_subsystem *vge_game_get_subsystem(struct vge_game *game,
+		const char *name)
+{
+	struct vge_list *inode;
+	struct vge_subsystem *subsys;
+	vge_list_foreach(&game->subsystems, struct vge_subsystem, subsys_list, subsys, inode) {
+		if(strcmp(subsys->name, name) == 0)
+			return subsys;
+	}
+	return NULL;
+}
+
+static void _vge_game_frame(struct vge_game *game)
+{
+	struct vge_list *inode;
+	struct vge_subsystem *subsys;
+	vge_list_foreach(&game->subsystems, struct vge_subsystem, subsys_list, subsys, inode) {
+		subsys->on_frame(game, subsys);
+	}
+}
+static void _vge_game_step(struct vge_game *game)
+{
+	struct vge_list *inode;
+	struct vge_subsystem *subsys;
+	vge_list_foreach(&game->subsystems, struct vge_subsystem, subsys_list, subsys, inode) {
+		subsys->on_step(game, subsys);
+	}
+}
+
+void vge_game_start(struct vge_game *game)
+{
+	struct vge_timed_counter fps_counter;
+	vge_timer_init(&game->step_timer, 1.0f/60);
+	vge_stopwatch_reset(&game->frame_watch);
+	vge_stopwatch_reset(&game->step_watch);
+	vge_timed_counter_init(&fps_counter, 3.0f);
+	u32 tmp;
+	
+	while(!(game->status & VGE_GAME_STATUS_QUITTING)) {
+		if(vge_timer_check(&game->step_timer)) {
+			game->step_dt = vge_stopwatch_reset(&game->step_watch);
+			_vge_game_step(game);
 		}
-		game->state->onframe_cb(game);
-		if(game->renderer)
-		{
-			vge_renderer_onframe(game->renderer);
-		}
-		if(game->input)
-		{
-			vge_input_onframe(game->input);
-		}
-		vge_scene_on_frame(game->state->scene, game);
+		/*
+		 * TODO: call it somewhere else
+		 */
 		SDL_PumpEvents();
-		while(SDL_PollEvent(&sdl_event))
-		{
-			switch(sdl_event.type)
-			{
-			case SDL_KEYDOWN:
-				if(sdl_event.key.repeat == 0)
-					vge_input_keyevent(game->input, sdl_event.key.keysym.sym, 1);
-				break;
-			case SDL_KEYUP:
-				vge_input_keyevent(game->input, sdl_event.key.keysym.sym, 0);
-				break;
-			case SDL_QUIT:
-				vge_game_stop(game);
-				break;
-			}
+		game->frame_dt = vge_stopwatch_reset(&game->frame_watch);
+		_vge_game_frame(game);
+		if((tmp = vge_timed_counter_increment(&fps_counter))) {
+			printf("FPS: %d\n", tmp/3);
 		}
 	}
 }
 
-void vge_game_destroy(struct vge_game* game)
+void vge_game_stop(struct vge_game *game)
 {
-	if(game->renderer)
-	{
-		vge_renderer_destroy(game->renderer);
-		game->renderer = NULL;
-	}
-	if(game->input)
-	{
-		vge_input_destroy(game->input);
-		game->input = NULL;
+	game->status |= VGE_GAME_STATUS_QUITTING;
+}
+
+void vge_game_destroy(struct vge_game *game)
+{
+	struct vge_subsystem *subsys;
+	while(!(vge_list_empty(&game->subsystems))) {
+		subsys = vge_list_first(&game->subsystems, struct vge_subsystem, subsys_list);
+		vge_list_remove(&subsys->subsys_list);
+		subsys->destroy(game, subsys);
 	}
 	SDL_Quit();
-}
-void vge_game_stop(struct vge_game* game)
-{
-	game->status |= VGEGAME_STATUS_QUITTING;
 }

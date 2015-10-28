@@ -13,18 +13,10 @@
 	You should have received a copy of the GNU General Public License
 	along with Vintage Game Engine.  If not, see <http://www.gnu.org/licenses/>.
 */
-#ifndef _VGE_TRANSFORM_H_
-#define _VGE_TRANSFORM_H_
+#include "core/math/vector2.h"
 
-#include "../math/vector.h"
-
-struct vge_transform
+void vge_vector2_set(struct vge_vector2 *src, float x, float y)
 {
-	struct vge_vector2 position;
-	float rotation;
-};
-struct nx_json;
-int vge_transform_read(struct vge_transform* dst, const struct nx_json* json);
-void vge_transform_clone(struct vge_transform* restrict dst,
-	const struct vge_transform* restrict src);
-#endif /* _VGE_TRANSFORM_H_ */
+	src->x = x;
+	src->y = y;
+}

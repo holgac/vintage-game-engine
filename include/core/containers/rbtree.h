@@ -13,8 +13,8 @@
 	You should have received a copy of the GNU General Public License
 	along with Vintage Game Engine.  If not, see <http://www.gnu.org/licenses/>.
 
-	This implementation was inspired by/based on the rbtree implementation in 
-	Linux Kernel 3.18.1.
+	This implementation was inspired by/based on the rbtree implementation in
+	Linux Kernel.
 	Thanks to Rob Landley <rob@landley.net> for documentation,
 		(C) 1999  Andrea Arcangeli <andrea@suse.de>
 		(C) 2002  David Woodhouse <dwmw2@infradead.org>
@@ -22,8 +22,9 @@
 		for implementation.
 */
 
-#ifndef _VGE_RBTREE_H_
-#include <vge.h>
+#ifndef __VGE_RBTREE_H
+#define __VGE_RBTREE_H
+#include "engine.h"
 
 struct vge_rbnode
 {
@@ -31,18 +32,27 @@ struct vge_rbnode
 		stores color in least significant bit, parent in other bits.
 	 */
 	unsigned long parent_color;
-	struct vge_rbnode* left;
-	struct vge_rbnode* right;
+	struct vge_rbnode *left;
+	struct vge_rbnode *right;
 } __attribute__((aligned(sizeof(long))));
 
 struct vge_rbtree
 {
-	struct vge_rbnode* root;
-	int (*compare)(void* lhs, void* rhs);
+	struct vge_rbnode *root;
+	int (*compare)(struct vge_rbnode *lhs, struct vge_rbnode *rhs);
 };
 
-int vge_rbtree_init(struct vge_rbtree* tree,
-	int (*compare)(void* lhs, void* rhs));
-int vge_rbtree_insert(struct vge_rbtree* tree, struct vge_rbnode* node);
+int vge_rbtree_init(struct vge_rbtree *tree,
+	int (*compare)(struct vge_rbnode *lhs, struct vge_rbnode *rhs));
+int vge_rbtree_insert(struct vge_rbtree *tree, struct vge_rbnode *node);
+struct vge_rbnode* vge_rbtree_find(struct vge_rbtree *tree,
+		struct vge_rbnode *node);
+struct vge_rbnode* vge_rbtree_find_match(struct vge_rbtree *tree,
+		const void *obj,
+		int (*compare)(struct vge_rbnode *lhs, const void *rhs));
+void vge_rbtree_remove(struct vge_rbtree *tree, struct vge_rbnode *node);
+struct vge_rbnode *vge_rbtree_first(struct vge_rbtree *tree);
+struct vge_rbnode *vge_rbtree_next(struct vge_rbnode *node);
+#define vge_rbtree_parent(nd) ((struct vge_rbnode *)((nd)->parent_color & ~3))
 
-#endif /* _VGE_RBTREE_H_ */
+#endif

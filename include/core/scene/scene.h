@@ -13,20 +13,15 @@
 	You should have received a copy of the GNU General Public License
 	along with Vintage Game Engine.  If not, see <http://www.gnu.org/licenses/>.
 */
-#ifndef _VGE_SCENE_H_
+#ifndef __VGE_SCENE_H
+#define __VGE_SCENE_H
 
-struct vge_entity;
-struct vge_game;
+#include "core/containers/list.h"
+#include "core/resource/resource.h"
+
 struct vge_scene
 {
-	struct vge_entity* entity;
+	struct vge_resource resource;
+	struct vge_list entity_list;
 };
-
-int vge_scene_init(struct vge_scene* scene);
-
-void vge_scene_on_frame(struct vge_scene* scene, struct vge_game* game);
-
-void vge_scene_on_step(struct vge_scene* scene, struct vge_game* game);
-
-void vge_scene_add_entity(struct vge_scene* scene, struct vge_entity* entity);
-#endif /* _VGE_SCENE_H_ */
+#endif

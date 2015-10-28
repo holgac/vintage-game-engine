@@ -28,3 +28,7 @@
 *.x86_64
 *.hex
 autom4te.cache
+
+# ---
+*.swp
+vge

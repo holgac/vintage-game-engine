@@ -13,37 +13,24 @@
 	You should have received a copy of the GNU General Public License
 	along with Vintage Game Engine.  If not, see <http://www.gnu.org/licenses/>.
 */
-#ifndef __VGE_TIMER_H
-#define __VGE_TIMER_H
+#ifndef __VGE_RESOURCE_LOADER_H
+#define __VGE_RESOURCE_LOADER_H
 
 #include "engine.h"
+#include "core/containers/rbtree.h"
 
-struct vge_stopwatch
+#define VGE_RESOURCE_LOADER_NAME_MAX 8
+
+struct vge_resource;
+
+struct vge_resource_loader
 {
-	float start_time;
+	struct vge_rbnode res_node;
+	char name[VGE_RESOURCE_LOADER_NAME_MAX];
+	struct vge_resource* (*load)(struct vge_resource_loader *loader, const char *path);
+	struct vge_resource* (*clone)(struct vge_resource_loader *loader, struct vge_resource *);
+	void (*unload)(struct vge_resource_loader *loader, struct vge_resource *);
 };
 
-struct vge_timer
-{
-	float period;
-	float expected;
-};
-struct vge_timed_counter
-{
-	struct vge_timer timer;
-	u32 count;
-};
-/*
- * gets actual time, expensive!
- * TODO: optimize usage, call each frame/step once to ensure consistency
- */
-float vge_timer_cur_time();
-float vge_stopwatch_reset(struct vge_stopwatch *sw);
-float vge_stopwatch_elapsed(struct vge_stopwatch *sw);
-void vge_timer_init(struct vge_timer *tm, float period);
-int vge_timer_check(struct vge_timer *tm);
-void vge_timed_counter_init(struct vge_timed_counter *tc, float period);
-u32 vge_timed_counter_increment(struct vge_timed_counter *tc);
 
 #endif
-
