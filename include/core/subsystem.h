@@ -13,17 +13,25 @@
 	You should have received a copy of the GNU General Public License
 	along with Vintage Game Engine.  If not, see <http://www.gnu.org/licenses/>.
 */
-#include <stdlib.h>
-#include <core/gamestate/gamestate.h>
-#include <core/scene/scene.h>
+#ifndef __VGE_SUBSYSTEM_H
+#define __VGE_SUBSYSTEM_H
 
-int vge_game_state_init(struct vge_game_state* state)
-{
-	state->scene = malloc(sizeof(struct vge_scene));
-	vge_scene_init(state->scene);
-	state->onframe_cb = NULL;
-	state->onstep_cb = NULL;
-	state->init_cb = NULL;
-	state->destroy_cb = NULL;
-	return 0;
-}
+struct vge_game;
+
+/*
+ * All subsystems, like physics, renderer, input etc.
+ * Each subsystem will run in a different thread
+ * on_frame called each frame. Called as much as we can.
+ * on_step called periodically
+ */
+struct vge_subsystem {
+	struct vge_list subsys_list;
+	void (*init)(struct vge_game *, struct vge_subsystem *);
+	void (*destroy)(struct vge_game *, struct vge_subsystem *);
+	void (*on_frame)(struct vge_game *, struct vge_subsystem *);
+	void (*on_step)(struct vge_game *, struct vge_subsystem *);
+	char name[32];
+};
+
+#endif
+

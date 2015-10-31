@@ -13,36 +13,26 @@
 	You should have received a copy of the GNU General Public License
 	along with Vintage Game Engine.  If not, see <http://www.gnu.org/licenses/>.
 */
-#ifndef _VGE_CONTAINER_H_
-#include <vge.h>
+#ifndef __VGE_COMPONENT_LOADER_H
+#define __VGE_COMPONENT_LOADER_H
 
-struct vge_container_chunk
+#include "engine.h"
+#include "core/containers/rbtree.h"
+
+#define VGE_COMPONENT_LOADER_NAME_MAX 32
+
+struct vge_component;
+
+struct vge_component_loader
 {
-	struct vge_container_chunk* next;
-	u32 size;
-	u32 capacity;
-	void* first_free;
-	u8* data_table;
+	struct vge_rbnode res_node;
+	char name[VGE_COMPONENT_LOADER_NAME_MAX];
+	struct vge_component* (*load)(struct vge_component_loader *loader, const char *path);
+	struct vge_component* (*clone)(struct vge_component_loader *loader, struct vge_component *);
+	void (*unload)(struct vge_component_loader *loader, struct vge_component *);
+	void (*on_frame)(struct vge_component *comp, struct vge_entity *ent);
+	void (*on_step)(struct vge_component *comp, struct vge_entity *ent);
 };
 
-/*
-	Regular memory container.
-	Provides chunk based allocation for fixed size objects.
-	Does NOT defragment the memory!
- */
-struct vge_container
-{
-	u32 obj_size;
-	u32 size;
-	u32 capacity;
-	struct vge_container_chunk* chunk;
-};
 
-int vge_container_init(struct vge_container* container, int obj_size);
-void vge_container_destroy(struct vge_container* container);
-
-void* vge_container_alloc(struct vge_container* container);
-void vge_container_free(struct vge_container* container, void* ptr);
-
-
-#endif /* _VGE_CONTAINER_H_ */
+#endif

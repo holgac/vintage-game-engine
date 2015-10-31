@@ -13,13 +13,17 @@
 	You should have received a copy of the GNU General Public License
 	along with Vintage Game Engine.  If not, see <http://www.gnu.org/licenses/>.
 */
-#ifndef _VGE_COMPONENT_H_
-struct vge_component_loader;
+#ifndef __VGE_COMPONENT_H
+#define __VGE_COMPONENT_H
+
+#include "core/containers/list.h"
+#include "core/resource/resource.h"
 
 struct vge_component
 {
-	struct vge_component* next;
-	struct vge_component_loader* loader;
+	struct vge_list comp_node;
+	struct vge_component_loader *loader;
 };
+#endif
 
-#endif /* _VGE_COMPONENT_H_ */
+

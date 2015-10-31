@@ -13,20 +13,4 @@
 	You should have received a copy of the GNU General Public License
 	along with Vintage Game Engine.  If not, see <http://www.gnu.org/licenses/>.
 */
-#ifndef _VGE_GRAPHICSCOMPONENT_H_
-#include "../core/scene/component.h"
-#include "../core/math/vertex.h"
-#include "../vge.h"
 
-struct vge_graphicscomponent
-{
-	struct vge_component component;
-	u32 num_vertices;
-	struct vge_vertex* vertices;
-};
-
-struct vge_component_loader;
-
-struct vge_component_loader* vge_graphicscomponent_get_loader();
-
-#endif /* _VGE_GRAPHICSCOMPONENT_H_ */

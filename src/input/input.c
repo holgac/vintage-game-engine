@@ -13,58 +13,103 @@
 	You should have received a copy of the GNU General Public License
 	along with Vintage Game Engine.  If not, see <http://www.gnu.org/licenses/>.
 */
-#include <input/input.h>
-#include <input/keycodes.h>
-
 #include <SDL2/SDL.h>
+#include <SDL2/SDL_opengl.h>
+#include "input/input.h"
+#include "core/game.h"
+#include "core/containers/list.h"
+#include "core/subsystem.h"
 
-
-int vge_input_init(struct vge_input* input)
+struct vge_input_sdl
 {
-	memset(input->cur_keys, 0, sizeof(char) * VGEINPUT_KEY_COUNT);
-	memset(input->persistent_keys, 0, sizeof(char) * VGEINPUT_KEY_COUNT);
+	struct vge_subsystem subsys;
+	u8 cur_keys[VGE_INPUT_KEY_COUNT];
+	u8 persistent_keys[VGE_INPUT_KEY_COUNT];
+};
+
+static void _vge_input_sdl_init(struct vge_game *game,
+		struct vge_subsystem *subsys)
+{
+}
+
+static void _vge_input_sdl_destroy(struct vge_game *game,
+		struct vge_subsystem *subsys)
+{
+	struct vge_input_sdl *input;
+	input = vge_container_of(subsys, struct vge_input_sdl, subsys);
+	free(input);
+}
+
+static void _vge_input_sdl_on_step(struct vge_game *game,
+		struct vge_subsystem *subsys)
+{
+}
+
+static void _vge_input_handle_keyevent(struct vge_input_sdl *input, int key,
+		int press)
+{
+	if(input->persistent_keys[key] == press)
+		return;
+	input->cur_keys[key] = input->persistent_keys[key] = press;
+}
+
+static void _vge_input_sdl_on_frame(struct vge_game *game,
+		struct vge_subsystem *subsys)
+{
+/* 
+    SDL_KEYDOWN        = 0x300,
+    SDL_KEYUP,
+    SDL_TEXTEDITING,
+    SDL_TEXTINPUT,
+    SDL_MOUSEMOTION    = 0x400,
+    SDL_MOUSEBUTTONDOWN,
+    SDL_MOUSEBUTTONUP,
+    SDL_MOUSEWHEEL,
+ */
+	SDL_Event event;
+	struct vge_input_sdl *input;
+	input = vge_container_of(subsys, struct vge_input_sdl, subsys);
+	memset(input->cur_keys, 0, sizeof(u8) * VGE_INPUT_KEY_COUNT);
+	while(SDL_PeepEvents(&event, 1, SDL_GETEVENT, SDL_KEYDOWN, SDL_KEYUP)) {
+		switch(event.type) {
+		case SDL_KEYDOWN:
+			if(!event.key.repeat)
+				_vge_input_handle_keyevent(input, event.key.keysym.sym, 1);
+			break;
+		case SDL_KEYUP:
+			_vge_input_handle_keyevent(input, event.key.keysym.sym, 0);
+			break;
+		}
+	}
+}
+
+int vge_input_init(struct vge_game *game, struct vge_subsystem **subsys)
+{
+	struct vge_input_sdl *input;
+	input = malloc(sizeof(struct vge_input_sdl));
+	memset(input->cur_keys, 0, sizeof(u8) * VGE_INPUT_KEY_COUNT);
+	memset(input->persistent_keys, 0, sizeof(u8) * VGE_INPUT_KEY_COUNT);
+	strcpy(input->subsys.name, "input");
+	input->subsys.init = _vge_input_sdl_init;
+	input->subsys.destroy = _vge_input_sdl_destroy;
+	input->subsys.on_frame = _vge_input_sdl_on_frame;
+	input->subsys.on_step = _vge_input_sdl_on_step;
+
+	vge_game_add_subsystem(game, &input->subsys);
+	*subsys = &input->subsys;
 	return 0;
 }
 
-void vge_input_destroy(struct vge_input* renderer)
+char vge_input_keypressed(struct vge_subsystem *subsys, int key)
 {
-}
-
-void vge_input_onframe(struct vge_input* input)
-{
-	memset(input->cur_keys, 0, sizeof(char) * VGEINPUT_KEY_COUNT);
-}
-
-void vge_input_keyevent(struct vge_input* input, int key, int press)
-{
-	if(key & SDLK_SCANCODE_MASK)
-	{
-		key ^= SDLK_SCANCODE_MASK;
-		key += VGEINPUT_REGULAR_KEY_END;
-	}
-	if(input->persistent_keys[key] == press)
-		return;
-	printf("key %d %d!\n", key, press);
-	input->cur_keys[key] = press;
-	input->persistent_keys[key] = press;
-}
-
-
-char vge_input_keypressed(struct vge_input* input, int key)
-{
-	if(key & SDLK_SCANCODE_MASK)
-	{
-		key ^= SDLK_SCANCODE_MASK;
-		key += VGEINPUT_REGULAR_KEY_END;
-	}
+	struct vge_input_sdl *input;
+	input = vge_container_of(subsys, struct vge_input_sdl, subsys);
 	return input->cur_keys[key];
 }
-char vge_input_keyheld(struct vge_input* input, int key)
+
+char vge_input_keyheld(struct vge_subsystem *subsys, int key)
 {
-	if(key & SDLK_SCANCODE_MASK)
-	{
-		key ^= SDLK_SCANCODE_MASK;
-		key += VGEINPUT_REGULAR_KEY_END;
-	}
+	struct vge_input_sdl *input;
+	input = vge_container_of(subsys, struct vge_input_sdl, subsys);
 	return input->persistent_keys[key];
 }

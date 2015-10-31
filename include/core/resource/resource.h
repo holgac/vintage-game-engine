@@ -13,23 +13,21 @@
 	You should have received a copy of the GNU General Public License
 	along with Vintage Game Engine.  If not, see <http://www.gnu.org/licenses/>.
 */
-#ifndef _VGE_RESOURCE_H_
+#ifndef __VGE_RESOURCE_H
+#define __VGE_RESOURCE_H
 
-#define VGERESOURCE_NAME_MAX 32
+#include "engine.h"
+#include "core/containers/rbtree.h"
 
-struct vge_resource_loader;
-/*
-	All of those fields are filled by the resource manager.
-	New resources should have vge_resource as their first field.
- */
+#define VGE_RESOURCE_NAME_MAX 64
+
+struct vge_resouce_loader;
 struct vge_resource
 {
-	char name[VGERESOURCE_NAME_MAX];
-	/*
-		TODO: rbtree
-	 */
-	struct vge_resource* next;
-	struct vge_resource_loader* loader;
+	struct vge_rbnode res_node;
+	char name[VGE_RESOURCE_NAME_MAX];
+	struct vge_resource_loader *loader;
 };
 
-#endif /* _VGE_RESOURCE_H_ */
+#endif
+

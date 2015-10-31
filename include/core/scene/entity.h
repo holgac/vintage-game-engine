@@ -13,16 +13,16 @@
 	You should have received a copy of the GNU General Public License
 	along with Vintage Game Engine.  If not, see <http://www.gnu.org/licenses/>.
 */
-#ifndef _VGE_ENTITY_H_
-#include "transform.h"
-struct vge_component;
-struct vge_prefab;
+#ifndef __VGE_ENTITY_H
+#define __VGE_ENTITY_H
+
+#include "core/containers/list.h"
+#include "core/resource/resource.h"
+
 struct vge_entity
 {
-	struct vge_entity* next;
-	struct vge_component* component;
-	struct vge_prefab* prefab;
-	struct vge_transform transform;
+	struct vge_list ent_node;
+	struct vge_list component_list;
 };
+#endif
 
-#endif /* _VGE_ENTITY_H_ */

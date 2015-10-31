@@ -13,31 +13,19 @@
 	You should have received a copy of the GNU General Public License
 	along with Vintage Game Engine.  If not, see <http://www.gnu.org/licenses/>.
 */
-#ifndef _VGE_RENDERER_H_
-#include <SDL2/SDL.h>
-#include <SDL2/SDL_opengl.h>
+#ifndef __VGE_RENDERER_H
+#define __VGE_RENDERER_H
 
-struct vge_window_properties
-{
-	char* window_title;
-	int pos_x;
-	int pos_y;
-	int width;
-	int height;
+struct vge_game;
+struct vge_subsystem;
+
+struct vge_window_properties {
+	char window_title[32];
+	int pos_x, pos_y;
+	int width, height;
 	int depth_buffer_size;
 };
 
-struct vge_renderer
-{
-	struct SDL_Window* sdl_window;
-	SDL_GLContext sdl_glcontext;
-	SDL_Renderer* sdl_renderer;
-};
-struct vge_game;
-int vge_renderer_init(struct vge_game* game, struct vge_window_properties* window_properties);
-void vge_renderer_destroy(struct vge_renderer* renderer);
-
-void vge_renderer_onframe(struct vge_renderer* renderer);
-void vge_renderer_setclearcolor(struct vge_renderer* renderer, float r, float g, float b);
-
-#endif /* _VGE_RENDERER_H_ */
+int vge_renderer_init(struct vge_game *, struct vge_window_properties *,
+		struct vge_subsystem **);
+#endif
