@@ -18,11 +18,18 @@
 
 #include "engine.h"
 #include "core/containers/list.h"
+#include "core/resource/resource.h"
+struct vge_entity;
+struct vge_game;
+struct vge_resource_loader;
 
 struct vge_prefab
 {
 	struct vge_resource resource;
 	struct vge_list component_list;
 };
+
+struct vge_entity *vge_prefab_create_entity(struct vge_prefab *prefab);
+struct vge_resource_loader *vge_prefab_get_loader();
 
 #endif

@@ -25,12 +25,11 @@ struct vge_resource;
 
 struct vge_resource_loader
 {
-	struct vge_rbnode res_node;
+	struct vge_rbnode loader_node;
 	char name[VGE_RESOURCE_LOADER_NAME_MAX];
 	struct vge_resource* (*load)(struct vge_resource_loader *loader, const char *path);
 	struct vge_resource* (*clone)(struct vge_resource_loader *loader, struct vge_resource *);
 	void (*unload)(struct vge_resource_loader *loader, struct vge_resource *);
 };
-
 
 #endif

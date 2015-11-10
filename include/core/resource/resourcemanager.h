@@ -28,8 +28,19 @@ struct vge_resource_manager
 };
 
 void vge_resource_manager_init(struct vge_resource_manager *rman);
-struct vge_resource *vge_resource_manager_getresource(
+struct vge_resource *vge_resource_manager_get_resource(
 		struct vge_resource_manager *rman, const char *name);
+/*
+ * After registering, loader belongs to the resource manager,
+ * resource manager calls free.
+ * TODO: loader should have destroy function with loader argument.
+ */
+void vge_resource_manager_register_loader(struct vge_resource_manager *rman,
+		struct vge_resource_loader *loader);
+void vge_resource_manager_load_recursive(struct vge_resource_manager *rman,
+		const char *path);
+struct vge_resource *vge_resource_manager_load_resource(struct vge_resource_manager *rman,
+		const char *path);
 
 #endif
 

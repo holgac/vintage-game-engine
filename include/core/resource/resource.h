@@ -30,4 +30,3 @@ struct vge_resource
 };
 
 #endif
-

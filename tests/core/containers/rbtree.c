@@ -128,16 +128,6 @@ VGETEST rbtree_insert()
 	expect(j == elem_cnt, "All elements should be traversed");
 	expect(vge_rbtree_first(&tree) == NULL, "Tree should be emptied");
 }
-/*
-void rbtree_delete(int r);
-aVGETEST rbtree_dtest()
-{
-	int i=0;
-	for(i=0;;++i)
-		rbtree_delete(i);
-}
-void rbtree_delete(int r)
-*/
 
 void ensure_consistency(struct vge_rbtree *tree)
 {
