@@ -13,13 +13,20 @@
 	You should have received a copy of the GNU General Public License
 	along with Vintage Game Engine.  If not, see <http://www.gnu.org/licenses/>.
 */
-#ifndef __VGE_H
-#define __VGE_H
-#include "core/containers/list.h"
-#include "core/time/timer.h"
+
+#include <stdlib.h>
+#include <stdarg.h>
 #include "core/log/logger.h"
-#include "core/game.h"
-#include "core/subsystem.h"
-#include "renderer/renderer.h"
-#include "input/input.h"
-#endif
+
+void vge_log_inner(const char *fmt, ...)
+{
+	/* TODO: 1024? */
+	char buf[1024];
+	va_list ap;
+	va_start(ap, fmt);
+	vsnprintf(buf, sizeof(buf), fmt, ap);
+	va_end(ap);
+
+	printf("%s\n", buf);
+}
+

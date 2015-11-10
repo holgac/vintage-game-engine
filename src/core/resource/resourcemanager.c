@@ -21,6 +21,7 @@
 #include "core/resource/resource.h"
 #include "core/resource/resourceloader.h"
 #include "core/resource/resourcemanager.h"
+#include "core/log/logger.h"
 
 static int _resource_compare(struct vge_rbnode *lhs, struct vge_rbnode *rhs)
 {
@@ -84,7 +85,7 @@ void vge_resource_manager_load_recursive(struct vge_resource_manager *rman,
     DIR* dir = opendir(path);
     int pathlen = strlen(path);
     struct dirent* ent;
-    printf("load recursive: %s\n", path);
+    vge_log("load recursive: %s", path);
     strcpy(entpath, path);
     entpath[pathlen] = '/';
     while((ent = readdir(dir)))
@@ -110,14 +111,14 @@ struct vge_resource *vge_resource_manager_load_resource(struct vge_resource_mana
 	struct vge_resource_loader *loader;
 	struct vge_resource *res;
 	extension = strrchr(path, '.');
-	// TODO: logging
 	if(extension == NULL)
-		return NULL;
+		vge_log_and_return(NULL, "No extension found in file %s", path);
 	if(strrchr(extension, '/'))
+		vge_log_and_return(NULL, "Error in extension of %s", path);
 		return NULL;
 	rbnode = vge_rbtree_find_match(&rman->resource_loaders, extension, _resource_loader_match);
 	if(!rbnode)
-		return NULL;
+		vge_log_and_return(NULL, "No loader registered to load %s", path);
 	loader = vge_container_of(rbnode, struct vge_resource_loader, loader_node);
 	res = loader->load(loader, path);
 	vge_rbtree_insert(&rman->resources, &res->res_node);

@@ -38,4 +38,6 @@ typedef unsigned long u64;
  * Used for testing interactive parts
  */
 int game_main(int argc, char **argv);
+
+#define VGE_DEBUG
 #endif

@@ -31,4 +31,4 @@ autom4te.cache
 
 # ---
 *.swp
-./vge
+vge

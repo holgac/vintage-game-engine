@@ -23,7 +23,7 @@
 */
 
 #include <stdlib.h>
-#include <core/containers/rbtree.h>
+#include "core/containers/rbtree.h"
 
 #define CLR_RED 0
 #define CLR_BLACK 1
