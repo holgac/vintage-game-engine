@@ -20,6 +20,7 @@
 #include "core/containers/rbtree.h"
 
 struct vge_resource;
+struct vge_resource_loader;
 
 struct vge_resource_manager
 {

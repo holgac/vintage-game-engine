@@ -18,10 +18,10 @@
 
 #include "core/containers/list.h"
 #include "core/time/timer.h"
+#include "core/resource/resourcemanager.h"
+#include "core/scene/componentmanager.h"
 
 struct vge_subsystem;
-struct vge_resource_manager;
-struct vge_component_manager;
 
 #define VGE_GAME_STATUS_QUITTING 1
 
@@ -33,8 +33,8 @@ struct vge_game {
 	float frame_dt;
 	float step_dt;
 	u32 status;
-	struct vge_resource_manager *rman;
-	struct vge_component_manager *cman;
+	struct vge_resource_manager rman;
+	struct vge_component_manager cman;
 };
 
 int vge_game_init(struct vge_game *game);

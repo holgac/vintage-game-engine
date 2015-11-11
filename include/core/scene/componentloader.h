@@ -22,6 +22,7 @@
 #define VGE_COMPONENT_LOADER_NAME_MAX 32
 
 struct vge_component;
+struct vge_entity;
 
 struct vge_component_loader
 {

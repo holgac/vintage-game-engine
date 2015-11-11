@@ -19,7 +19,7 @@
 #include "engine.h"
 
 #define VGE_LOGGER_CRIT 5
-#define VGE_LOGGER_ERR 4 
+#define VGE_LOGGER_ERR 4
 #define VGE_LOGGER_WARNING 3
 #define VGE_LOGGER_NOTICE 2
 #define VGE_LOGGER_INFO 1
@@ -29,6 +29,10 @@
 #define vge_log_and_return(retval, ...) { \
 		vge_log(__VA_ARGS__); \
 		return retval; \
+	}
+#define vge_log_and_vreturn(...) { \
+		vge_log(__VA_ARGS__); \
+		return; \
 	}
 void vge_log_inner(const char *fmt, ...);
 #endif

@@ -17,13 +17,28 @@
 #include "core/scene/prefab.h"
 #include "core/resource/resourceloader.h"
 #include "external/nxjson/nxjson.h"
+#include "core/log/logger.h"
+
+static struct vge_prefab *_load_single(struct vge_resource_loader *loader,
+		const struct nx_json *json)
+{
+	struct vge_prefab *prefab;
+	const struct nx_json *elem;
+	prefab = malloc(sizeof(struct vge_prefab));
+	vge_list_init(&prefab->component_list);
+
+	prefab->resource.loader = loader;
+	elem = nx_json_get(json, "name");
+	if(!elem || (elem->type != NX_JSON_STRING))
+		vge_log_and_return(NULL, "Name invalid in prefab");
+	strcpy(prefab->resource.name, elem->text_value);
+	return prefab;
+}
 
 static struct vge_resource *_load_prefab(struct vge_resource_loader *loader,
 		const char *path)
 {
-	struct vge_prefab *prefab;
-    const nx_json* json;
-    const nx_json* elem;
+    const struct nx_json *json;
     FILE* f;
     off_t flen;
     char* buf;
@@ -34,7 +49,9 @@ static struct vge_resource *_load_prefab(struct vge_resource_loader *loader,
     fseeko(f, 0, SEEK_SET);
     fread(buf, flen, 1, f);
     json = nx_json_parse(buf, 0);
-	return NULL;
+	if(json->type != NX_JSON_OBJECT)
+		vge_log_and_return(NULL, "Prefab file is invalid: %s", path);
+	return &_load_single(loader, json)->resource;
 }
 
 static struct vge_resource *_clone_prefab(struct vge_resource_loader *loader,
@@ -55,6 +72,7 @@ struct vge_resource_loader *vge_prefab_get_loader()
 	loader->load = _load_prefab;
 	loader->clone = _clone_prefab;
 	loader->unload = _unload_prefab;
+	strcpy(loader->name, "prefab");
 	return loader;
 }
 

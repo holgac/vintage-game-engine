@@ -139,7 +139,7 @@ int vge_scene_manager_load_scene(struct vge_game *game,
 	sman = vge_container_of(subsys, struct vge_scene_manager, subsys);
 	if(sman->cur_scene)
 		_destroy_scene(sman->cur_scene);
-	scene_res = vge_resource_manager_get_resource(game->rman, name);
+	scene_res = vge_resource_manager_get_resource(&game->rman, name);
 	if(!scene_res)
 		return -1;
 	sman->cur_scene = vge_container_of(scene_res, struct vge_scene, resource);

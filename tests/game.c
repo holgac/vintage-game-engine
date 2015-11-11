@@ -16,7 +16,8 @@ static void _destroy(struct vge_game *game, struct vge_subsystem *subsys)
 static void _on_frame(struct vge_game *game, struct vge_subsystem *subsys)
 {
 	struct vge_test_game *test_game = vge_container_of(subsys, struct vge_test_game, subsys);
-	if(vge_input_keypressed(test_game->input, VGEINPUT_KEY_ESCAPE)) {
+	if(vge_input_keypressed(test_game->input, VGEINPUT_KEY_ESCAPE) ||
+			vge_input_keypressed(test_game->input, VGEINPUT_KEY_Q)) {
 		printf("exiting...\n");
 		vge_game_stop(game);
 	}
@@ -35,7 +36,7 @@ int game_main(int argc, char **argv)
 	vge_game_init(&game);
 	vge_renderer_init(&game, NULL, &test_game.renderer);
 	vge_input_init(&game, &test_game.input);
-	vge_resource_manager_load_recursive(game.rman, "./resources");
+	vge_resource_manager_load_recursive(&game.rman, "./resources");
 
 	test_game.subsys.init = _init;
 	test_game.subsys.destroy = _destroy;

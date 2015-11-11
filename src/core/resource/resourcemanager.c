@@ -113,15 +113,17 @@ struct vge_resource *vge_resource_manager_load_resource(struct vge_resource_mana
 	extension = strrchr(path, '.');
 	if(extension == NULL)
 		vge_log_and_return(NULL, "No extension found in file %s", path);
-	if(strrchr(extension, '/'))
+	if(strchr(extension, '/'))
 		vge_log_and_return(NULL, "Error in extension of %s", path);
-		return NULL;
-	rbnode = vge_rbtree_find_match(&rman->resource_loaders, extension, _resource_loader_match);
+	rbnode = vge_rbtree_find_match(&rman->resource_loaders, extension + 1, _resource_loader_match);
 	if(!rbnode)
 		vge_log_and_return(NULL, "No loader registered to load %s", path);
 	loader = vge_container_of(rbnode, struct vge_resource_loader, loader_node);
 	res = loader->load(loader, path);
+	if(!res)
+		vge_log_and_return(NULL, "Failed to load %s", path);
 	vge_rbtree_insert(&rman->resources, &res->res_node);
+	vge_log("Loaded resource %s", res->name);
 	return res;
 }
 

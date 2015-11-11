@@ -17,12 +17,15 @@
 #include <SDL2/SDL.h>
 #include "core/game.h"
 #include "core/subsystem.h"
+#include "core/scene/prefab.h"
 
 int vge_game_init(struct vge_game *game)
 {
 	vge_list_init(&game->subsystems);
 	SDL_Init(SDL_INIT_EVERYTHING);
 	game->status = 0;
+	vge_resource_manager_init(&game->rman);
+	vge_resource_manager_register_loader(&game->rman, vge_prefab_get_loader());
 	return 0;
 }
 
