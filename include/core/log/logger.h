@@ -26,13 +26,20 @@
 #define VGE_LOGGER_DEBUG 0
 
 #define vge_log(fmt, ...) vge_log_inner("%s:%u: " fmt, __FILE__, __LINE__, ##  __VA_ARGS__)
+
 #define vge_log_and_return(retval, ...) { \
 		vge_log(__VA_ARGS__); \
 		return retval; \
 	}
+
 #define vge_log_and_vreturn(...) { \
 		vge_log(__VA_ARGS__); \
 		return; \
+	}
+
+#define vge_log_and_goto(label, ...) { \
+		vge_log(__VA_ARGS__); \
+		goto label; \
 	}
 void vge_log_inner(const char *fmt, ...);
 #endif

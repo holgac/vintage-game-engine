@@ -13,26 +13,11 @@
 	You should have received a copy of the GNU General Public License
 	along with Vintage Game Engine.  If not, see <http://www.gnu.org/licenses/>.
 */
-#ifndef __VGE_RESOURCE_LOADER_H
-#define __VGE_RESOURCE_LOADER_H
+#ifndef __VGE_GRAPHICSCOMPONENT_H
+#define __VGE_GRAPHICSCOMPONENT_H
 
-#include "engine.h"
-#include "core/containers/rbtree.h"
+struct vge_component_loader;
 
-#define VGE_RESOURCE_LOADER_NAME_MAX 8
-
-struct vge_resource;
-struct vge_game;
-
-struct vge_resource_loader
-{
-	struct vge_rbnode loader_node;
-	char name[VGE_RESOURCE_LOADER_NAME_MAX];
-	struct vge_resource* (*load)(struct vge_resource_loader *loader,
-			struct vge_game *game, const char *path);
-	struct vge_resource* (*clone)(struct vge_resource_loader *loader,
-			struct vge_resource *);
-	void (*unload)(struct vge_resource_loader *loader, struct vge_resource *);
-};
+struct vge_component_loader *vge_graphics_component_get_loader();
 
 #endif

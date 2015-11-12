@@ -15,7 +15,9 @@
 */
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_opengl.h>
+
 #include "renderer/renderer.h"
+#include "renderer/graphicscomponent.h"
 #include "core/game.h"
 #include "core/containers/list.h"
 #include "core/subsystem.h"
@@ -31,6 +33,12 @@ struct vge_renderer_gl
 static void _vge_renderer_gl_init(struct vge_game *game,
 		struct vge_subsystem *subsys)
 {
+	/* 
+	 * TODO: Do we register the loader(s) in subsys init?
+	 * We can also do so in vge_renderer_init in this case.
+	 */
+	vge_component_manager_register_loader(&game->cman,
+			vge_graphics_component_get_loader());
 }
 
 static void _vge_renderer_gl_destroy(struct vge_game *game,
@@ -56,6 +64,16 @@ static void _vge_renderer_gl_on_frame(struct vge_game *game,
 	renderer = vge_container_of(subsys, struct vge_renderer_gl, subsys);
 	SDL_GL_SwapWindow(renderer->sdl_window);
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+	glLoadIdentity();
+	/* TEST RENDERING */
+	glBegin(GL_TRIANGLES);
+		glColor3f(1.0f,0.0f,0.0f);
+		glVertex3f( 0.0f, 1.0f, 0.0f);
+		glColor3f(0.0f,1.0f,0.0f);
+		glVertex3f(-1.0f,-1.0f, 0.0f);
+		glColor3f(0.0f,0.0f,1.0f);
+		glVertex3f( 1.0f,-1.0f, 0.0f);
+	glEnd();
 }
 
 

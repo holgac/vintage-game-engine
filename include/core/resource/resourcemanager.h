@@ -20,6 +20,7 @@
 #include "core/containers/rbtree.h"
 
 struct vge_resource;
+struct vge_game;
 struct vge_resource_loader;
 
 struct vge_resource_manager
@@ -39,8 +40,9 @@ struct vge_resource *vge_resource_manager_get_resource(
 void vge_resource_manager_register_loader(struct vge_resource_manager *rman,
 		struct vge_resource_loader *loader);
 void vge_resource_manager_load_recursive(struct vge_resource_manager *rman,
-		const char *path);
-struct vge_resource *vge_resource_manager_load_resource(struct vge_resource_manager *rman,
+		struct vge_game *game, const char *path);
+struct vge_resource *vge_resource_manager_load_resource(
+		struct vge_resource_manager *rman, struct vge_game *game,
 		const char *path);
 
 #endif

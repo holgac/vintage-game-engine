@@ -27,7 +27,6 @@
 struct vge_scene_manager
 {
 	struct vge_subsystem subsys;
-	struct vge_list entity_list;
 	struct vge_scene *cur_scene;
 	struct vge_resource_loader loader;
 };
@@ -96,7 +95,7 @@ static void _on_frame(struct vge_game *game,
 }
 
 static struct vge_resource *_load_scene(struct vge_resource_loader *loader,
-		const char *path)
+		struct vge_game *game, const char *path)
 {
 	struct vge_scene_manager *sman;
 	struct vge_scene *scene;
@@ -151,7 +150,6 @@ int vge_scene_manager_init(struct vge_game *game,
 {
 	struct vge_scene_manager *sman;
 	sman = malloc(sizeof(struct vge_scene_manager));
-	vge_list_init(&sman->entity_list);
 	sman->cur_scene = NULL;
 	strcpy(sman->subsys.name, "scene_manager");
 	sman->subsys.init = _init;

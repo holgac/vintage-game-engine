@@ -26,6 +26,7 @@ int vge_game_init(struct vge_game *game)
 	game->status = 0;
 	vge_resource_manager_init(&game->rman);
 	vge_resource_manager_register_loader(&game->rman, vge_prefab_get_loader());
+	vge_component_manager_init(&game->cman);
 	return 0;
 }
 
@@ -86,9 +87,8 @@ void vge_game_start(struct vge_game *game)
 		SDL_PumpEvents();
 		game->frame_dt = vge_stopwatch_reset(&game->frame_watch);
 		_vge_game_frame(game);
-		if((tmp = vge_timed_counter_increment(&fps_counter))) {
+		if((tmp = vge_timed_counter_increment(&fps_counter)))
 			printf("FPS: %d\n", tmp/3);
-		}
 	}
 }
 

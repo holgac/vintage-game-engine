@@ -30,7 +30,7 @@ void vge_component_manager_init(struct vge_component_manager *cman);
 void vge_component_manager_register_loader(
 		struct vge_component_manager *cman, struct vge_component_loader *loader);
 struct vge_component *vge_component_manager_load_component(
-		struct vge_component_manager *cman, struct nx_json *json);
+		struct vge_component_manager *cman, const struct nx_json *json);
 #endif
 
 

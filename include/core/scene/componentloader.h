@@ -23,16 +23,20 @@
 
 struct vge_component;
 struct vge_entity;
+struct nx_json;
 
 struct vge_component_loader
 {
+	/* TODO: naming */
 	struct vge_rbnode res_node;
 	char name[VGE_COMPONENT_LOADER_NAME_MAX];
 	struct vge_component* (*load)(struct vge_component_loader *loader,
-			const char *path);
+			const struct nx_json* json);
 	struct vge_component* (*clone)(struct vge_component_loader *loader,
-			struct vge_component *);
-	void (*unload)(struct vge_component_loader *loader, struct vge_component *);
+			struct vge_component *comp);
+	void (*unload)(struct vge_component_loader *loader,
+			struct vge_component *comp);
+	// TODO: should we pass vge_game?
 	void (*on_frame)(struct vge_component *comp, struct vge_entity *ent);
 	void (*on_step)(struct vge_component *comp, struct vge_entity *ent);
 };

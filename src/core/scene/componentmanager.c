@@ -15,6 +15,8 @@
 */
 #include "core/scene/componentmanager.h"
 #include "core/scene/componentloader.h"
+#include "external/nxjson/nxjson.h"
+#include "core/log/logger.h"
 
 static int _component_loader_compare(struct vge_rbnode *lhs, struct vge_rbnode *rhs)
 {
@@ -37,14 +39,26 @@ void vge_component_manager_init(struct vge_component_manager *cman)
 	vge_rbtree_init(&cman->loaders, _component_loader_compare);
 }
 struct vge_component *vge_component_manager_load_component(
-		struct vge_component_manager *cman, struct nx_json *json)
+		struct vge_component_manager *cman, const struct nx_json *json)
 {
-	return NULL;
+	struct vge_rbnode *node;
+	struct vge_component_loader *loader;
+	const struct nx_json *elem;
+	elem = nx_json_get(json, "type");
+	if(!elem)
+		vge_log_and_return(NULL, "Components in json should specify type");
+	node = vge_rbtree_find_match(&cman->loaders, elem->text_value, 
+			_component_loader_match);
+	if(!node)
+		vge_log_and_return(NULL, "Cannot load component %s", elem->text_value);
+	loader = vge_container_of(node, struct vge_component_loader, res_node);
+	return loader->load(loader, json);
 }
 
 void vge_component_manager_register_loader(
 		struct vge_component_manager *cman, struct vge_component_loader *loader)
 {
+	vge_rbtree_insert(&cman->loaders, &loader->res_node);
 }
 
 

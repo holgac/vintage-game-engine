@@ -13,26 +13,16 @@
 	You should have received a copy of the GNU General Public License
 	along with Vintage Game Engine.  If not, see <http://www.gnu.org/licenses/>.
 */
-#ifndef __VGE_RESOURCE_LOADER_H
-#define __VGE_RESOURCE_LOADER_H
 
-#include "engine.h"
-#include "core/containers/rbtree.h"
+#include "core/math/vertex3.h"
+#include "external/nxjson/nxjson.h"
 
-#define VGE_RESOURCE_LOADER_NAME_MAX 8
-
-struct vge_resource;
-struct vge_game;
-
-struct vge_resource_loader
+void vge_vertex3_read(struct vge_vertex3 *src, const struct nx_json *json)
 {
-	struct vge_rbnode loader_node;
-	char name[VGE_RESOURCE_LOADER_NAME_MAX];
-	struct vge_resource* (*load)(struct vge_resource_loader *loader,
-			struct vge_game *game, const char *path);
-	struct vge_resource* (*clone)(struct vge_resource_loader *loader,
-			struct vge_resource *);
-	void (*unload)(struct vge_resource_loader *loader, struct vge_resource *);
-};
-
-#endif
+	const struct nx_json *elem;
+	elem = nx_json_get(json, "position");
+	if(!elem)
+		vge_vector3_set(&src->position, 0, 0, 0);
+	else
+		vge_vector3_read(&src->position, elem->text_value);
+}

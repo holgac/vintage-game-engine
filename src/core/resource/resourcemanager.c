@@ -76,7 +76,7 @@ void vge_resource_manager_register_loader(struct vge_resource_manager *rman,
 }
 
 void vge_resource_manager_load_recursive(struct vge_resource_manager *rman,
-		const char *path)
+		struct vge_game *game, const char *path)
 {
     /*
         TODO: UNIX specific code
@@ -96,14 +96,15 @@ void vge_resource_manager_load_recursive(struct vge_resource_manager *rman,
 		if(ent->d_name[0] == '.')
 			continue;
         if(S_ISDIR(st.st_mode))
-            vge_resource_manager_load_recursive(rman, entpath);
+            vge_resource_manager_load_recursive(rman, game, entpath);
         else if(S_ISREG(st.st_mode))
-            vge_resource_manager_load_resource(rman, entpath);
+            vge_resource_manager_load_resource(rman, game, entpath);
     }
     closedir(dir);
 }
 
-struct vge_resource *vge_resource_manager_load_resource(struct vge_resource_manager *rman,
+struct vge_resource *vge_resource_manager_load_resource(
+		struct vge_resource_manager *rman, struct vge_game *game,
 		const char *path)
 {
 	char *extension;
@@ -119,7 +120,7 @@ struct vge_resource *vge_resource_manager_load_resource(struct vge_resource_mana
 	if(!rbnode)
 		vge_log_and_return(NULL, "No loader registered to load %s", path);
 	loader = vge_container_of(rbnode, struct vge_resource_loader, loader_node);
-	res = loader->load(loader, path);
+	res = loader->load(loader, game, path);
 	if(!res)
 		vge_log_and_return(NULL, "Failed to load %s", path);
 	vge_rbtree_insert(&rman->resources, &res->res_node);
