@@ -45,7 +45,7 @@ static void _vge_input_sdl_on_step(struct vge_game *game,
 {
 }
 
-static void _vge_input_handle_keyevent(struct vge_input_sdl *input, int key,
+static void _vge_input_handle_keyevent(struct vge_input_sdl *input, vge_key key,
 		int press)
 {
 	if(input->persistent_keys[key] == press)
@@ -68,16 +68,20 @@ static void _vge_input_sdl_on_frame(struct vge_game *game,
  */
 	SDL_Event event;
 	struct vge_input_sdl *input;
+  int keysym;
 	input = vge_container_of(subsys, struct vge_input_sdl, subsys);
 	memset(input->cur_keys, 0, sizeof(u8) * VGE_INPUT_KEY_COUNT);
 	while(SDL_PeepEvents(&event, 1, SDL_GETEVENT, SDL_KEYDOWN, SDL_KEYUP)) {
+    keysym = event.key.keysym.sym;
+    keysym = VGE_REGULAR_KEY_END * ((keysym & SDLK_SCANCODE_MASK) >> 30)
+        + (keysym & ~SDLK_SCANCODE_MASK);
 		switch(event.type) {
 		case SDL_KEYDOWN:
 			if(!event.key.repeat)
-				_vge_input_handle_keyevent(input, event.key.keysym.sym, 1);
+				_vge_input_handle_keyevent(input, keysym, 1);
 			break;
 		case SDL_KEYUP:
-			_vge_input_handle_keyevent(input, event.key.keysym.sym, 0);
+      _vge_input_handle_keyevent(input, keysym, 0);
 			break;
 		}
 	}

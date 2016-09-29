@@ -20,6 +20,7 @@
 #ifdef VGE_PLATFORM_OSX
 #include <mach/clock.h>
 #include <mach/mach.h>
+#include <mach/clock_types.h>
 #endif
 
 float vge_timer_cur_time()
@@ -27,12 +28,11 @@ float vge_timer_cur_time()
 #if defined(VGE_PLATFORM_LINUX)
   struct timespec ts;
 	clock_gettime(CLOCK_MONOTONIC, &ts);
-	return ts.tv_sec + ts.tv_nsec * 0.000000001f;
 #elif defined(VGE_PLATFORM_OSX)
 /* TODO: cache cclock */
 	clock_serv_t cclock;
 	mach_timespec_t ts;
-	host_get_clock_service(mach_host_self(), CALENDAR_CLOCK, &cclock);
+	host_get_clock_service(mach_host_self(), SYSTEM_CLOCK, &cclock);
 	clock_get_time(cclock, &ts);
 	mach_port_deallocate(mach_task_self(), cclock);
 #else

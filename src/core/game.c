@@ -81,9 +81,7 @@ void vge_game_start(struct vge_game *game)
 			game->step_dt = vge_stopwatch_reset(&game->step_watch);
 			_vge_game_step(game);
 		}
-		/*
-		 * TODO: call it somewhere else
-		 */
+		/* TODO: call it somewhere else */
 		SDL_PumpEvents();
 		game->frame_dt = vge_stopwatch_reset(&game->frame_watch);
 		_vge_game_frame(game);
