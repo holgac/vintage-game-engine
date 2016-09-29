@@ -22,6 +22,12 @@
 #define VGETEST void
 void expect(int result, char *errormsg);
 
+#ifdef __MACH__
+#define VGE_PLATFORM_OSX
+#else
+#define VGE_PLATFORM_LINUX
+#endif
+
 typedef char s8;
 typedef short s16;
 typedef int s32;

@@ -1,6 +1,20 @@
 CC=gcc
+UNAME:=$(shell uname -s)
 
-LDLIBS = -lSDL2 -lGL
+ifeq ($(UNAME), Darwin)
+	PLATFORM=OSX
+endif
+ifeq ($(UNAME), Linux)
+	PLATFORM=LINUX
+endif
+
+LDLIBS=-lSDL2
+ifeq ($(PLATFORM), LINUX)
+	LDLIBS+=-lGL
+endif
+ifeq ($(PLATFORM), OSX)
+	LDLIBS+=-framework OpenGL
+endif
 
 DEBUG=true
 INCLUDEDIR=./include

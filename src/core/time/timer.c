@@ -17,10 +17,27 @@
 #include <time.h>
 #include "core/time/timer.h"
 
+#ifdef VGE_PLATFORM_OSX
+#include <mach/clock.h>
+#include <mach/mach.h>
+#endif
+
 float vge_timer_cur_time()
 {
-	struct timespec ts;
+#if defined(VGE_PLATFORM_LINUX)
+  struct timespec ts;
 	clock_gettime(CLOCK_MONOTONIC, &ts);
+	return ts.tv_sec + ts.tv_nsec * 0.000000001f;
+#elif defined(VGE_PLATFORM_OSX)
+/* TODO: cache cclock */
+	clock_serv_t cclock;
+	mach_timespec_t ts;
+	host_get_clock_service(mach_host_self(), CALENDAR_CLOCK, &cclock);
+	clock_get_time(cclock, &ts);
+	mach_port_deallocate(mach_task_self(), cclock);
+#else
+#error "Timers are not supported for this platform yet"
+#endif
 	return ts.tv_sec + ts.tv_nsec * 0.000000001f;
 }
 

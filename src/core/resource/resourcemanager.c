@@ -17,6 +17,7 @@
 #include <sys/stat.h>
 #include <dirent.h>
 #include <unistd.h>
+#include <limits.h>
 
 #include "core/resource/resource.h"
 #include "core/resource/resourceloader.h"
