@@ -22,4 +22,6 @@
 
 int vge_scene_manager_init(struct vge_game *game,
     struct vge_subsystem **subsys);
+int vge_scene_manager_load_scene(struct vge_game *game,
+    struct vge_subsystem *subsys, const char *scene_name);
 #endif

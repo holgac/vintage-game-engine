@@ -109,3 +109,16 @@ int vge_scene_manager_init(struct vge_game *game,
   return 0;
 }
 
+int vge_scene_manager_load_scene(struct vge_game *game,
+    struct vge_subsystem *subsys, const char *scene_name)
+{
+  struct vge_scene_manager *sman;
+  struct vge_resource *scene_prefab;
+  sman = vge_container_of(subsys, struct vge_scene_manager, subsys);
+  if(sman->cur_scene)
+    _destroy_scene(sman->cur_scene);
+  scene_prefab = vge_resource_manager_get_resource(&game->rman, scene_name);
+  sman->cur_scene = vge_scene_from_prefab(game, scene_prefab);
+  return 0;
+}
+
