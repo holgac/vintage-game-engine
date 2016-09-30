@@ -19,6 +19,7 @@
 #include "core/time/timer.h"
 #include "core/log/logger.h"
 #include "core/resource/resourcemanager.h"
+#include "core/scene/scenemanager.h"
 #include "core/game.h"
 #include "core/subsystem.h"
 #include "renderer/renderer.h"

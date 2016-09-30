@@ -24,4 +24,5 @@ struct vge_scene
 	struct vge_resource resource;
 	struct vge_list entity_list;
 };
+struct vge_resource_loader *vge_scene_get_loader();
 #endif

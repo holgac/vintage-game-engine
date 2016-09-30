@@ -23,6 +23,9 @@ struct vge_game;
  * Each subsystem will run in a different thread
  * on_frame called each frame. Called as much as we can.
  * on_step called periodically
+ * A typical init function is in this format:
+ *   int vge_scene_manager_init(struct vge_game *, struct vge_subsystem **)
+ * and it registers the subsystem to game with vge_game_add_subsystem.
  */
 struct vge_subsystem {
 	struct vge_list subsys_list;

@@ -22,13 +22,11 @@
 #include "core/resource/resourcemanager.h"
 #include "core/resource/resourceloader.h"
 #include "core/game.h"
-#include "external/nxjson/nxjson.h"
 
 struct vge_scene_manager
 {
-	struct vge_subsystem subsys;
-	struct vge_scene *cur_scene;
-	struct vge_resource_loader loader;
+  struct vge_subsystem subsys;
+  struct vge_scene *cur_scene;
 };
 
 static void _destroy_scene(struct vge_scene *scene)
@@ -94,57 +92,6 @@ static void _on_frame(struct vge_game *game,
 	}
 }
 
-static struct vge_resource *_load_scene(struct vge_resource_loader *loader,
-		struct vge_game *game, const char *path)
-{
-	struct vge_scene_manager *sman;
-	struct vge_scene *scene;
-    const nx_json* json;
-    const nx_json* elem;
-    FILE* f;
-    off_t flen;
-    char* buf;
-    f = fopen(path, "rb");
-    fseeko(f, 0, SEEK_END);
-    flen = ftello(f);
-    buf = alloca(flen+1);
-    fseeko(f, 0, SEEK_SET);
-    fread(buf, flen, 1, f);
-    json = nx_json_parse(buf, 0);
-	sman = vge_container_of(loader, struct vge_scene_manager, loader);
-	scene = malloc(sizeof(struct vge_scene));
-	scene->resource.loader = loader;
-	vge_list_init(&scene->entity_list);
-	return &scene->resource;
-}
-
-static struct vge_resource *_clone_scene(struct vge_resource_loader *loader,
-		struct vge_resource *old_scn)
-{
-	return NULL;
-}
-
-void _unload_scene(struct vge_resource_loader *loader,
-		struct vge_resource *scn)
-{
-}
-
-int vge_scene_manager_load_scene(struct vge_game *game,
-		struct vge_subsystem *subsys, const char *name)
-{
-	struct vge_scene_manager *sman;
-	struct vge_scene *scene;
-	struct vge_resource *scene_res;
-	sman = vge_container_of(subsys, struct vge_scene_manager, subsys);
-	if(sman->cur_scene)
-		_destroy_scene(sman->cur_scene);
-	scene_res = vge_resource_manager_get_resource(&game->rman, name);
-	if(!scene_res)
-		return -1;
-	sman->cur_scene = vge_container_of(scene_res, struct vge_scene, resource);
-	return 0;
-}
-
 int vge_scene_manager_init(struct vge_game *game,
 		struct vge_subsystem **subsys)
 {
@@ -158,10 +105,6 @@ int vge_scene_manager_init(struct vge_game *game,
 	sman->subsys.on_frame = _on_frame;
 
 	vge_game_add_subsystem(game, &sman->subsys);
-	strcpy(sman->loader.name, "vgescn");
-	sman->loader.load = _load_scene;
-	sman->loader.clone = _clone_scene;
-	sman->loader.unload = _unload_scene;
 	*subsys = &sman->subsys;
 	return 0;
 }

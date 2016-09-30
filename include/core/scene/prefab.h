@@ -30,6 +30,7 @@ struct vge_prefab
 };
 
 struct vge_entity *vge_prefab_create_entity(struct vge_prefab *prefab);
+/* Creates and returns a prefab loader. Registered to game automatically */
 struct vge_resource_loader *vge_prefab_get_loader();
 
 #endif

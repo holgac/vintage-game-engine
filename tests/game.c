@@ -3,6 +3,7 @@ struct vge_test_game {
 	struct vge_subsystem subsys;
 	struct vge_subsystem *renderer;
 	struct vge_subsystem *input;
+	struct vge_subsystem *scene_manager;
 };
 
 static void _init(struct vge_game *game, struct vge_subsystem *subsys)
@@ -36,6 +37,7 @@ int game_main(int argc, char **argv)
 	vge_game_init(&game);
 	vge_renderer_init(&game, NULL, &test_game.renderer);
 	vge_input_init(&game, &test_game.input);
+	vge_scene_manager_init(&game, &test_game.scene_manager);
 	vge_resource_manager_load_recursive(&game.rman, &game, "./resources");
 
 	test_game.subsys.init = _init;

@@ -18,6 +18,7 @@
 #include "core/game.h"
 #include "core/subsystem.h"
 #include "core/scene/prefab.h"
+#include "core/scene/scene.h"
 
 int vge_game_init(struct vge_game *game)
 {
@@ -27,6 +28,7 @@ int vge_game_init(struct vge_game *game)
 	vge_resource_manager_init(&game->rman);
 	vge_resource_manager_register_loader(&game->rman, vge_prefab_get_loader());
 	vge_component_manager_init(&game->cman);
+	vge_resource_manager_register_loader(&game->rman, vge_scene_get_loader());
 	return 0;
 }
 
