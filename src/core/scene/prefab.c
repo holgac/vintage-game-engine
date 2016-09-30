@@ -16,12 +16,21 @@
 
 #include "core/containers/list.h"
 #include "core/scene/prefab.h"
+#include "core/scene/entity.h"
 #include "core/scene/component.h"
+#include "core/scene/componentloader.h"
 #include "core/game.h"
 #include "core/scene/componentmanager.h"
 #include "core/resource/resourceloader.h"
 #include "external/nxjson/nxjson.h"
 #include "core/log/logger.h"
+
+/* TODO: maybe lazy conversion to entity? */
+struct vge_prefab
+{
+	struct vge_resource resource;
+	struct vge_list component_list;
+};
 
 static struct vge_prefab *_load_single(struct vge_resource_loader *loader,
 		struct vge_game *game, const struct nx_json *json)
@@ -35,6 +44,7 @@ static struct vge_prefab *_load_single(struct vge_resource_loader *loader,
 
 	prefab->resource.loader = loader;
 	elem = nx_json_get(json, "name");
+  /* TODO: free */
 	if(!elem || (elem->type != NX_JSON_STRING))
 		vge_log_and_return(NULL, "Name invalid in prefab");
 	strcpy(prefab->resource.name, elem->text_value);
@@ -90,3 +100,21 @@ struct vge_resource_loader *vge_prefab_get_loader()
 	return loader;
 }
 
+struct vge_entity *vge_prefab_create_entity(struct vge_resource *res)
+{
+  struct vge_prefab *prefab;
+  struct vge_entity *entity;
+	struct vge_list *tmp_node;
+  struct vge_component *compi;
+  struct vge_component *new_comp;
+  prefab = vge_container_of(res, struct vge_prefab, resource);
+  entity = malloc(sizeof(struct vge_entity));
+  vge_list_init(&entity->ent_node);
+  vge_list_init(&entity->component_list);
+	vge_list_foreach(&prefab->component_list, struct vge_component, comp_node, compi, tmp_node) {
+    new_comp = compi->loader->clone(compi->loader, compi);
+    vge_list_add(&entity->component_list, &new_comp->comp_node);
+  }
+  entity->prefab = prefab;
+  return entity;
+}

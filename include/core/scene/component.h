@@ -22,8 +22,9 @@
 struct vge_component
 {
 	/* TODO: Naming should indicate that it belongs to the entity/prefab */
+  /* Maybe use name node for horizontal, list for vertical hierarchy? */
 	struct vge_list comp_node;
-	// TODO: Who should set this: Loader or Manager?
+	/* TODO: Who should set this: Loader or Manager? */
 	struct vge_component_loader *loader;
 };
 #endif

@@ -22,6 +22,7 @@
 struct vge_scene_prefab
 {
 	struct vge_resource resource;
+  char path[0];
 };
 
 struct vge_scene
@@ -30,5 +31,5 @@ struct vge_scene
 	struct vge_list entity_list;
 };
 struct vge_resource_loader *vge_scene_prefab_get_loader();
-struct vge_scene *vge_scene_from_prefab(struct vge_scene_prefab *);
+struct vge_scene *vge_scene_from_prefab(struct vge_game *, struct vge_resource *);
 #endif

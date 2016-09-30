@@ -19,10 +19,17 @@
 #include "core/containers/list.h"
 #include "core/resource/resource.h"
 
+#define VGE_ENTITY_NAME_MAX 32
+
+struct vge_prefab;
 struct vge_entity
 {
 	struct vge_list ent_node;
 	struct vge_list component_list;
+  struct vge_prefab *prefab;
+  /* TODO: store rbtree from scene to all entities using name */
+	char name[VGE_ENTITY_NAME_MAX];
+  /* TODO: store children */
 };
 #endif
 

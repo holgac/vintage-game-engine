@@ -23,13 +23,7 @@ struct vge_entity;
 struct vge_game;
 struct vge_resource_loader;
 
-struct vge_prefab
-{
-	struct vge_resource resource;
-	struct vge_list component_list;
-};
-
-struct vge_entity *vge_prefab_create_entity(struct vge_prefab *prefab);
+struct vge_entity *vge_prefab_create_entity(struct vge_resource *);
 /* Creates and returns a prefab loader. Registered to game automatically */
 struct vge_resource_loader *vge_prefab_get_loader();
 

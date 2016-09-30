@@ -16,11 +16,13 @@
 
 #include "core/scene/scenemanager.h"
 #include "core/scene/scene.h"
+#include "core/scene/prefab.h"
 #include "core/resource/resourceloader.h"
+#include "core/game.h"
 #include "external/nxjson/nxjson.h"
 #include "core/log/logger.h"
 
-static struct vge_resource *_load_scene(struct vge_resource_loader *loader,
+static struct vge_resource *_load_scene_prefab(struct vge_resource_loader *loader,
     struct vge_game *game, const char *path)
 {
   struct vge_scene_prefab *scene_prefab;
@@ -28,6 +30,7 @@ static struct vge_resource *_load_scene(struct vge_resource_loader *loader,
   const nx_json* elem;
   FILE* f;
   off_t flen;
+  u32 pathlen;
   char* buf;
   f = fopen(path, "rb");
   fseeko(f, 0, SEEK_END);
@@ -35,40 +38,88 @@ static struct vge_resource *_load_scene(struct vge_resource_loader *loader,
   buf = alloca(flen+1);
   fseeko(f, 0, SEEK_SET);
   fread(buf, flen, 1, f);
+  fclose(f);
   json = nx_json_parse(buf, 0);
-  scene_prefab = malloc(sizeof(struct vge_scene_prefab));
+  pathlen = strlen(path);
+  scene_prefab = malloc(sizeof(struct vge_scene_prefab) + pathlen + 1);
   scene_prefab->resource.loader = loader;
 	elem = nx_json_get(json, "name");
 	if(!elem || (elem->type != NX_JSON_STRING))
-		vge_log_and_return(NULL, "Name invalid in scene");
+		vge_log_and_goto(free_scene_prefab, "Name invalid in scene");
 	strcpy(scene_prefab->resource.name, elem->text_value);
+  strcpy(scene_prefab->path, path);
   return &scene_prefab->resource;
+free_scene_prefab:
+  free(scene_prefab);
+  return NULL;
 }
 
-static struct vge_resource *_clone_scene(struct vge_resource_loader *loader,
+static struct vge_resource *_clone_scene_prefab(struct vge_resource_loader *loader,
     struct vge_resource *old_scn)
 {
   return NULL;
 }
 
-static void _unload_scene(struct vge_resource_loader *loader,
+static void _unload_scene_prefab(struct vge_resource_loader *loader,
     struct vge_resource *scn)
 {
+}
+
+static struct vge_entity *_load_entity(struct vge_game *game, struct vge_scene *scene, const nx_json *json)
+{
+  const nx_json* elem;
+  struct vge_entity *entity;
+  struct vge_resource *prefab;
+	elem = nx_json_get(json, "name");
+  prefab = vge_resource_manager_get_resource(&game->rman, elem->text_value);
+  entity = vge_prefab_create_entity(prefab);
+  /* TODO: set name, pos etc */
+  return entity;
+}
+
+static struct vge_scene *_load_scene(struct vge_game *game, const char *path)
+{
+  struct vge_scene *scene;
+  struct vge_entity *entity;
+  const nx_json* json;
+  const nx_json* elem;
+  FILE* f;
+  off_t flen;
+  char* buf;
+  u32 i;
+  f = fopen(path, "rb");
+  fseeko(f, 0, SEEK_END);
+  flen = ftello(f);
+  buf = alloca(flen+1);
+  fseeko(f, 0, SEEK_SET);
+  fread(buf, flen, 1, f);
+  fclose(f);
+  json = nx_json_parse(buf, 0);
+  scene = malloc(sizeof(struct vge_scene));
+	elem = nx_json_get(json, "entities");
+  if(elem) {
+    for(i=0; i<elem->length; ++i) {
+      entity = _load_entity(game, scene, nx_json_item(elem, i));
+    }
+  }
+  return scene;
 }
 
 struct vge_resource_loader *vge_scene_prefab_get_loader()
 {
 	struct vge_resource_loader *loader;
 	loader = malloc(sizeof(struct vge_resource_loader));
-	loader->load = _load_scene;
-	loader->clone = _clone_scene;
-	loader->unload = _unload_scene;
+	loader->load = _load_scene_prefab;
+	loader->clone = _clone_scene_prefab;
+	loader->unload = _unload_scene_prefab;
 	strcpy(loader->name, "vgescn");
 	return loader;
 }
 
-struct vge_scene *vge_scene_from_prefab(struct vge_scene_prefab *)
+struct vge_scene *vge_scene_from_prefab(struct vge_game *game, struct vge_resource *resource)
 {
-  return NULL;
+  struct vge_scene_prefab *prefab;
+	prefab = vge_container_of(resource, struct vge_scene_prefab, resource);
+  return _load_scene(game, prefab->path);
 }
 
