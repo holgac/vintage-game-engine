@@ -1,9 +1,9 @@
 #include "vge.h"
 struct vge_test_game {
-	struct vge_subsystem subsys;
-	struct vge_subsystem *renderer;
-	struct vge_subsystem *input;
-	struct vge_subsystem *scene_manager;
+  struct vge_subsystem subsys;
+  struct vge_subsystem *renderer;
+  struct vge_subsystem *input;
+  struct vge_subsystem *scene_manager;
 };
 
 static void _init(struct vge_game *game, struct vge_subsystem *subsys)
@@ -16,12 +16,12 @@ static void _destroy(struct vge_game *game, struct vge_subsystem *subsys)
 
 static void _on_frame(struct vge_game *game, struct vge_subsystem *subsys)
 {
-	struct vge_test_game *test_game = vge_container_of(subsys, struct vge_test_game, subsys);
-	if(vge_input_keypressed(test_game->input, VGEINPUT_KEY_ESCAPE) ||
-			vge_input_keypressed(test_game->input, VGEINPUT_KEY_Q)) {
-		printf("exiting...\n");
-		vge_game_stop(game);
-	}
+  struct vge_test_game *test_game = vge_container_of(subsys, struct vge_test_game, subsys);
+  if(vge_input_keypressed(test_game->input, VGEINPUT_KEY_ESCAPE) ||
+      vge_input_keypressed(test_game->input, VGEINPUT_KEY_Q)) {
+    printf("exiting...\n");
+    vge_game_stop(game);
+  }
 }
 
 static void _on_step(struct vge_game *game, struct vge_subsystem *subsys)
@@ -31,23 +31,23 @@ static void _on_step(struct vge_game *game, struct vge_subsystem *subsys)
 
 int game_main(int argc, char **argv)
 {
-	struct vge_game game;
-	struct vge_test_game test_game;
+  struct vge_game game;
+  struct vge_test_game test_game;
 
-	vge_game_init(&game);
-	vge_renderer_init(&game, NULL, &test_game.renderer);
-	vge_input_init(&game, &test_game.input);
-	vge_scene_manager_init(&game, &test_game.scene_manager);
-	vge_resource_manager_load_recursive(&game.rman, &game, "./resources");
+  vge_game_init(&game);
+  vge_renderer_init(&game, NULL, &test_game.renderer);
+  vge_input_init(&game, &test_game.input);
+  vge_scene_manager_init(&game, &test_game.scene_manager);
+  vge_resource_manager_load_recursive(&game.rman, &game, "./resources");
 
-	test_game.subsys.init = _init;
-	test_game.subsys.destroy = _destroy;
-	test_game.subsys.on_frame = _on_frame;
-	test_game.subsys.on_step = _on_step;
+  test_game.subsys.init = _init;
+  test_game.subsys.destroy = _destroy;
+  test_game.subsys.on_frame = _on_frame;
+  test_game.subsys.on_step = _on_step;
 
-	vge_game_add_subsystem(&game, &test_game.subsys);
-	vge_game_start(&game);
-	vge_game_destroy(&game);
+  vge_game_add_subsystem(&game, &test_game.subsys);
+  vge_game_start(&game);
+  vge_game_destroy(&game);
 
-	return 0;
+  return 0;
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2013 Yaroslav Stavnichiy <yarosla@gmail.com>
+ * Copyright (c) 2013 Yaroslav Stavnichiy <yarosla  gmail.com>
  *
  * This file is part of NXJSON.
  *
