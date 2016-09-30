@@ -19,10 +19,16 @@
 #include "core/containers/list.h"
 #include "core/resource/resource.h"
 
-struct vge_scene
+struct vge_scene_prefab
 {
 	struct vge_resource resource;
+};
+
+struct vge_scene
+{
+  struct vge_scene_prefab *prefab;
 	struct vge_list entity_list;
 };
-struct vge_resource_loader *vge_scene_get_loader();
+struct vge_resource_loader *vge_scene_prefab_get_loader();
+struct vge_scene *vge_scene_from_prefab(struct vge_scene_prefab *);
 #endif

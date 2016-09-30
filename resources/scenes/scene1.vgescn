@@ -1,0 +1,11 @@
+{
+  "name": "scene1",
+  "entitites": [
+    {
+      "name": "the_only_cube",
+      "prefab": "cube",
+      "position": "0 0 0",
+      "rotation": "0 0 0"
+    }
+  ]
+}
