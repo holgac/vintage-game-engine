@@ -20,13 +20,13 @@
 
 struct vge_stopwatch
 {
-	float start_time;
+	vge_time_t start_time;
 };
 
 struct vge_timer
 {
-	float period;
-	float expected;
+	vge_time_t period;
+	vge_time_t expected;
 };
 struct vge_timed_counter
 {
@@ -37,12 +37,12 @@ struct vge_timed_counter
  * gets actual time, expensive!
  * TODO: optimize usage, call each frame/step once to ensure consistency
  */
-float vge_timer_cur_time();
-float vge_stopwatch_reset(struct vge_stopwatch *sw);
-float vge_stopwatch_elapsed(struct vge_stopwatch *sw);
-void vge_timer_init(struct vge_timer *tm, float period);
+vge_time_t vge_timer_cur_time();
+vge_time_t vge_stopwatch_reset(struct vge_stopwatch *sw);
+vge_time_t vge_stopwatch_elapsed(struct vge_stopwatch *sw);
+void vge_timer_init(struct vge_timer *tm, vge_time_t period);
 int vge_timer_check(struct vge_timer *tm);
-void vge_timed_counter_init(struct vge_timed_counter *tc, float period);
+void vge_timed_counter_init(struct vge_timed_counter *tc, vge_time_t period);
 u32 vge_timed_counter_increment(struct vge_timed_counter *tc);
 
 #endif

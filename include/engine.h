@@ -36,6 +36,7 @@ typedef unsigned char u8;
 typedef unsigned short u16;
 typedef unsigned int u32;
 typedef unsigned long u64;
+typedef double vge_time_t;
 #define vge_offsetof(TYPE, MEMBER) ((size_t) &((TYPE *)0)->MEMBER)
 #define vge_container_of(ptr, type, member) ({\
 	const typeof( ((type *)0)->member ) *__mptr = (ptr);    \

@@ -23,7 +23,7 @@
 #include <mach/clock_types.h>
 #endif
 
-float vge_timer_cur_time()
+vge_time_t vge_timer_cur_time()
 {
 #if defined(VGE_PLATFORM_LINUX)
   struct timespec ts;
@@ -38,24 +38,24 @@ float vge_timer_cur_time()
 #else
 #error "Timers are not supported for this platform yet"
 #endif
-	return ts.tv_sec + ts.tv_nsec * 0.000000001f;
+	return ts.tv_sec + ts.tv_nsec * 0.000000001;
 }
 
-float vge_stopwatch_elapsed(struct vge_stopwatch *sw)
+vge_time_t vge_stopwatch_elapsed(struct vge_stopwatch *sw)
 {
 	return vge_timer_cur_time() - sw->start_time;
 }
 
-float vge_stopwatch_reset(struct vge_stopwatch *sw)
+vge_time_t vge_stopwatch_reset(struct vge_stopwatch *sw)
 {
-	float t, d;
+	vge_time_t t, d;
 	t = vge_timer_cur_time();
 	d = t - sw->start_time;
 	sw->start_time = t;
 	return d;
 }
 
-void vge_timer_init(struct vge_timer *tm, float period)
+void vge_timer_init(struct vge_timer *tm, vge_time_t period)
 {
 	tm->period = period;
 	tm->expected = vge_timer_cur_time() + period;
@@ -63,7 +63,7 @@ void vge_timer_init(struct vge_timer *tm, float period)
 
 int vge_timer_check(struct vge_timer *tm)
 {
-	float t = vge_timer_cur_time();
+	vge_time_t t = vge_timer_cur_time();
 	if(tm->expected < t) {
 		tm->expected += tm->period;
 		return 1;
@@ -71,7 +71,7 @@ int vge_timer_check(struct vge_timer *tm)
 	return 0;
 }
 
-void vge_timed_counter_init(struct vge_timed_counter *tc, float period)
+void vge_timed_counter_init(struct vge_timed_counter *tc, vge_time_t period)
 {
 	tc->count = 0;
 	vge_timer_init(&tc->timer, period);
