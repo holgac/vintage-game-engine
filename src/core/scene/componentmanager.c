@@ -38,8 +38,10 @@ void vge_component_manager_init(struct vge_component_manager *cman)
 {
   vge_rbtree_init(&cman->loaders, _component_loader_compare);
 }
+
 struct vge_component *vge_component_manager_load_component(
-    struct vge_component_manager *cman, const struct nx_json *json)
+    struct vge_component_manager *cman, struct vge_game *game,
+    const struct nx_json *json)
 {
   struct vge_rbnode *node;
   struct vge_component_loader *loader;
@@ -52,7 +54,7 @@ struct vge_component *vge_component_manager_load_component(
   if(!node)
     vge_log_and_return(NULL, "Cannot load component %s", elem->text_value);
   loader = vge_container_of(node, struct vge_component_loader, res_node);
-  return loader->load(loader, json);
+  return loader->load(loader, game, json);
 }
 
 void vge_component_manager_register_loader(

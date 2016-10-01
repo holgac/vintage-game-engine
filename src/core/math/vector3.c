@@ -14,7 +14,6 @@
   along with Vintage Game Engine.  If not, see <http://www.gnu.org/licenses/>.
 */
 #include <stdio.h>
-
 #include "core/math/vector3.h"
 
 void vge_vector3_set(struct vge_vector3 *src, float x, float y, float z)

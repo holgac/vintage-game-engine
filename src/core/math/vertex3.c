@@ -25,4 +25,9 @@ void vge_vertex3_read(struct vge_vertex3 *src, const struct nx_json *json)
     vge_vector3_set(&src->position, 0, 0, 0);
   else
     vge_vector3_read(&src->position, elem->text_value);
+  elem = nx_json_get(json, "texcoord");
+  if(!elem)
+    vge_vector2_set(&src->texcoord, 0, 0);
+  else
+    vge_vector2_read(&src->texcoord, elem->text_value);
 }

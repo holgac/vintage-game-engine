@@ -20,3 +20,4 @@ struct vge_vector2
 };
 
 void vge_vector2_set(struct vge_vector2 *src, float x, float y);
+void vge_vector2_read(struct vge_vector2 *src, const char *data);

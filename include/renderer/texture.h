@@ -13,18 +13,10 @@
   You should have received a copy of the GNU General Public License
   along with Vintage Game Engine.  If not, see <http://www.gnu.org/licenses/>.
 */
-#ifndef __VGE_VERTEX3_H
-#define __VGE_VERTEX3_H
-#include "core/math/vector3.h"
-#include "core/math/vector2.h"
-
-struct nx_json;
-
-struct vge_vertex3
-{
-  struct vge_vector3 position;
-  struct vge_vector2 texcoord;
-};
-
-void vge_vertex3_read(struct vge_vertex3 *src, const struct nx_json *json);
+#ifndef __VGE_TEXTURE_H
+#define __VGE_TEXTURE_H
+struct vge_resource;
+struct vge_resource_loader *vge_texture_get_loader();
+void *vge_texture_get_handle(struct vge_resource *);
 #endif
+

@@ -19,12 +19,14 @@
 
 #include "external/nxjson/nxjson.h"
 #include "renderer/graphicscomponent.h"
+#include "renderer/texture.h"
 #include "core/math/vertex3.h"
 #include "core/math/vector3.h"
 #include "core/scene/component.h"
 #include "core/scene/componentloader.h"
 #include "core/scene/entity.h"
 #include "core/log/logger.h"
+#include "core/game.h"
 
 #define VGE_GRAPHICS_COMPONENT_CLONE 1
 
@@ -36,10 +38,11 @@ struct vge_graphics_component
   u32 num_indices;
   u32 *indices;
   u32 flags;
+  struct vge_resource *texture;
 };
 
 struct vge_component *_load_component(struct vge_component_loader *loader,
-    const struct nx_json *json)
+    struct vge_game *game, const struct nx_json *json)
 {
   const struct nx_json *elem;
   struct vge_graphics_component *comp;
@@ -62,6 +65,12 @@ struct vge_component *_load_component(struct vge_component_loader *loader,
         &comp->indices[i*3], &comp->indices[i*3 + 1],
         &comp->indices[i*3 + 2]);
   comp->num_indices = elem->length;
+  elem = nx_json_get(json, "texture");
+  if(!elem)
+    comp->texture = NULL;
+  else {
+    comp->texture = vge_resource_manager_get_resource(&game->rman, elem->text_value);
+  }
   comp->component.loader = loader;
   comp->flags = 0;
 
@@ -86,6 +95,7 @@ struct vge_component *_clone_component(struct vge_component_loader *loader,
   clone->vertices = orig->vertices;
   clone->num_indices = orig->num_indices;
   clone->indices = orig->indices;
+  clone->texture = orig->texture;
   clone->flags = orig->flags | VGE_GRAPHICS_COMPONENT_CLONE;
   return &clone->component;
 }
@@ -111,17 +121,29 @@ void _on_frame(struct vge_component *comp, struct vge_entity *ent)
   struct vge_graphics_component *grcomp;
   u32 i;
   struct vge_vertex3 *vert;
+  GLuint *handle;
   grcomp = vge_container_of(comp, struct vge_graphics_component, component);
   glPushMatrix();
   glTranslatef(ent->position.x, ent->position.y, ent->position.z);
+  if (grcomp->texture) {
+    glEnable(GL_TEXTURE_2D);
+    handle = vge_texture_get_handle(grcomp->texture);
+    glBindTexture(GL_TEXTURE_2D, *handle);
+  } else {
+    glDisable(GL_TEXTURE_2D);
+  }
+  
   /* TODO: vertex/index buffer rendering */
   glBegin(GL_TRIANGLES);
   for(i=0; i<grcomp->num_indices; ++i) {
     vert = grcomp->vertices + grcomp->indices[i*3];
+    glTexCoord2fv(&vert->texcoord.x);
     glVertex3fv(&vert->position.x);
     vert = grcomp->vertices + grcomp->indices[i*3 + 1];
+    glTexCoord2fv(&vert->texcoord.x);
     glVertex3fv(&vert->position.x);
     vert = grcomp->vertices + grcomp->indices[i*3 + 2];
+    glTexCoord2fv(&vert->texcoord.x);
     glVertex3fv(&vert->position.x);
   }
   glEnd();

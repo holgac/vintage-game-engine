@@ -51,7 +51,7 @@ static struct vge_prefab *_load_single(struct vge_resource_loader *loader,
   elem = nx_json_get(json, "components");
   if(elem) {
     for(i=0; i<elem->length; ++i) {
-      comp = vge_component_manager_load_component(&game->cman,
+      comp = vge_component_manager_load_component(&game->cman, game,
           nx_json_item(elem, i));
       vge_list_add(&prefab->component_list, &comp->comp_node);
     }

@@ -23,6 +23,7 @@
 
 struct vge_component;
 struct vge_entity;
+struct vge_game;
 struct nx_json;
 
 struct vge_component_loader
@@ -31,7 +32,7 @@ struct vge_component_loader
   struct vge_rbnode res_node;
   char name[VGE_COMPONENT_LOADER_NAME_MAX];
   struct vge_component* (*load)(struct vge_component_loader *loader,
-      const struct nx_json* json);
+      struct vge_game *game, const struct nx_json* json);
   struct vge_component* (*clone)(struct vge_component_loader *loader,
       struct vge_component *comp);
   void (*unload)(struct vge_component_loader *loader,

@@ -13,10 +13,16 @@
   You should have received a copy of the GNU General Public License
   along with Vintage Game Engine.  If not, see <http://www.gnu.org/licenses/>.
 */
+#include <stdio.h>
 #include "core/math/vector2.h"
 
 void vge_vector2_set(struct vge_vector2 *src, float x, float y)
 {
   src->x = x;
   src->y = y;
+}
+
+void vge_vector2_read(struct vge_vector2 *src, const char *data)
+{
+  sscanf(data, "%f %f", &src->x, &src->y);
 }
