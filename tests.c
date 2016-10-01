@@ -8,6 +8,7 @@ void list_addremove();
 void rbtree_init();
 void rbtree_insert();
 void rbtree_delete();
+void rbtree_duplicate();
 
 void expect(int result, char *errormsg)
 {
@@ -25,8 +26,9 @@ void run_tests()
 	rbtree_init();
 	rbtree_insert();
 	rbtree_delete();
+	rbtree_duplicate();
 	time_elapsed = vge_stopwatch_elapsed(&sw);
-	printf("Ran 5 tests in %2.3f\n", time_elapsed);
+	printf("Ran 6 tests in %2.3f\n", time_elapsed);
 }
 int main(int argc, char **argv)
 {

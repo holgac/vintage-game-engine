@@ -192,5 +192,31 @@ VGETEST rbtree_delete()
   expect(vge_rbtree_first(&tree) == NULL, "Tree should be emptied");
 }
 
-
+VGETEST rbtree_duplicate()
+{
+  struct vge_rbtree tree;
+  struct vge_rbnode *tmp_node;
+  struct test_struct *tmp;
+  const u32 elem_cnt = 1;
+  const u32 elem_range = 10000;
+  u32 i;
+  u8 elements[elem_range];
+  srand(time(NULL));
+  vge_rbtree_init(&tree, compare);
+  memset(elements, 0, elem_range);
+  /* push 1000 elems */
+  push_elems(&tree, elem_cnt, elem_range, elements, 0);
+  /* push same 1000 elems */
+  push_elems(&tree, elem_cnt, elem_range, elements, 1);
+  tmp_node = vge_rbtree_first(&tree);
+  i = 0;
+  do {
+    tmp = vge_container_of(tmp_node, struct test_struct, node);
+    expect(elements[tmp->val] == 2,
+        "All elements should be added twice, traversed once");
+    ++elements[tmp->val];
+    ++i;
+  } while((tmp_node = vge_rbtree_next(tmp_node)));
+  expect(i==elem_cnt, "Should not be able to store duplicate elements");
+}
 

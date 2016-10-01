@@ -44,6 +44,10 @@ struct vge_rbtree
 
 int vge_rbtree_init(struct vge_rbtree *tree,
   int (*compare)(struct vge_rbnode *lhs, struct vge_rbnode *rhs));
+/*
+ * Inserts given element to rbtree.
+ * Returns 0 on success, -1 if the element is not unique.
+ */
 int vge_rbtree_insert(struct vge_rbtree *tree, struct vge_rbnode *node);
 struct vge_rbnode* vge_rbtree_find(struct vge_rbtree *tree,
     struct vge_rbnode *node);
