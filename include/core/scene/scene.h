@@ -28,8 +28,14 @@ struct vge_scene_prefab
 struct vge_scene
 {
   struct vge_scene_prefab *prefab;
+  /* Linked list of all entities */
   struct vge_list entity_list;
+  /* Tree of entities sorted by name */
+  /* This is actually optional, maybe remove in optimized binaries? */
+  struct vge_rbtree entity_tree_by_name;
 };
+
 struct vge_resource_loader *vge_scene_prefab_get_loader();
 struct vge_scene *vge_scene_from_prefab(struct vge_game *, struct vge_resource *);
+struct vge_entity *vge_scene_get_entity(struct vge_scene *, const char *name);
 #endif

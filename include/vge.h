@@ -20,6 +20,8 @@
 #include "core/log/logger.h"
 #include "core/resource/resourcemanager.h"
 #include "core/scene/scenemanager.h"
+#include "core/scene/scene.h"
+#include "core/scene/entity.h"
 #include "core/game.h"
 #include "core/subsystem.h"
 #include "renderer/renderer.h"

@@ -121,4 +121,10 @@ int vge_scene_manager_load_scene(struct vge_game *game,
   sman->cur_scene = vge_scene_from_prefab(game, scene_prefab);
   return 0;
 }
+struct vge_scene *vge_scene_manager_get_cur_scene(struct vge_subsystem *subsys)
+{
+  struct vge_scene_manager *sman;
+  sman = vge_container_of(subsys, struct vge_scene_manager, subsys);
+  return sman->cur_scene;
+}
 

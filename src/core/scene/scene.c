@@ -77,8 +77,35 @@ static struct vge_entity *_load_entity(struct vge_game *game, const nx_json *jso
   entity = vge_prefab_create_entity(prefab);
   elem = nx_json_get(json, "name");
   strcpy(entity->name, elem->text_value);
-  /* TODO: set name, pos etc */
+  elem = nx_json_get(json, "position");
+  vge_vector3_read(&entity->position, elem->text_value);
   return entity;
+}
+
+static int _compare_entities(struct vge_rbnode *lhs, struct vge_rbnode *rhs)
+{
+  struct vge_entity *l, *r;
+  l = vge_container_of(lhs, struct vge_entity, ent_node_by_name);
+  r = vge_container_of(rhs, struct vge_entity, ent_node_by_name);
+  return strcmp(l->name, r->name);
+}
+
+static int _compare_entity_string(struct vge_rbnode *lhs, const void *rhs)
+{
+  struct vge_entity *l;
+  const char *r;
+  l = vge_container_of(lhs, struct vge_entity, ent_node_by_name);
+  r = rhs;
+  return strcmp(l->name, r);
+}
+
+struct vge_entity *vge_scene_get_entity(struct vge_scene *scene, const char *name)
+{
+  struct vge_rbnode *node;
+  node = vge_rbtree_find_match(&scene->entity_tree_by_name, name, _compare_entity_string);
+  if(!node)
+    return NULL;
+  return vge_container_of(node, struct vge_entity, ent_node_by_name);
 }
 
 static struct vge_scene *_load_scene(struct vge_game *game, const char *path)
@@ -91,6 +118,7 @@ static struct vge_scene *_load_scene(struct vge_game *game, const char *path)
   off_t flen;
   char* buf;
   u32 i;
+  int res;
   f = fopen(path, "rb");
   fseeko(f, 0, SEEK_END);
   flen = ftello(f);
@@ -101,11 +129,17 @@ static struct vge_scene *_load_scene(struct vge_game *game, const char *path)
   json = nx_json_parse(buf, 0);
   scene = malloc(sizeof(struct vge_scene));
   vge_list_init(&scene->entity_list);
+  vge_rbtree_init(&scene->entity_tree_by_name, _compare_entities);
   elem = nx_json_get(json, "entities");
   if(elem) {
     for(i=0; i<elem->length; ++i) {
       entity = _load_entity(game, nx_json_item(elem, i));
       vge_list_add(&scene->entity_list, &entity->ent_node);
+      res = vge_rbtree_insert(&scene->entity_tree_by_name,
+          &entity->ent_node_by_name);
+      if(res!=0)
+        vge_log("Duplicate entity name: %s. An entity search with this name "
+            "will give the first entity only", entity->name);
     }
   }
   return scene;

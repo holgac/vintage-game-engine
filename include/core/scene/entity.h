@@ -16,6 +16,7 @@
 #ifndef __VGE_ENTITY_H
 #define __VGE_ENTITY_H
 
+#include "core/math/vector3.h"
 #include "core/containers/list.h"
 #include "core/resource/resource.h"
 
@@ -25,11 +26,14 @@ struct vge_prefab;
 struct vge_entity
 {
   struct vge_list ent_node;
+  struct vge_rbnode ent_node_by_name;
   struct vge_list component_list;
   struct vge_prefab *prefab;
   /* TODO: store rbtree from scene to all entities using name */
   char name[VGE_ENTITY_NAME_MAX];
   /* TODO: store children */
+  /* TODO: store vge_transform that encapsulates pos + rot */
+  struct vge_vector3 position;
 };
 #endif
 

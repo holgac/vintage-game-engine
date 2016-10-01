@@ -112,6 +112,8 @@ void _on_frame(struct vge_component *comp, struct vge_entity *ent)
   u32 i;
   struct vge_vertex3 *vert;
   grcomp = vge_container_of(comp, struct vge_graphics_component, component);
+  glPushMatrix();
+  glTranslatef(ent->position.x, ent->position.y, ent->position.z);
   /* TODO: vertex/index buffer rendering */
   glBegin(GL_TRIANGLES);
   for(i=0; i<grcomp->num_indices; ++i) {
@@ -123,6 +125,7 @@ void _on_frame(struct vge_component *comp, struct vge_entity *ent)
     glVertex3fv(&vert->position.x);
   }
   glEnd();
+  glPopMatrix();
 }
 
 struct vge_component_loader *vge_graphics_component_get_loader()

@@ -17,10 +17,47 @@ static void _destroy(struct vge_game *game, struct vge_subsystem *subsys)
 static void _on_frame(struct vge_game *game, struct vge_subsystem *subsys)
 {
   struct vge_test_game *test_game = vge_container_of(subsys, struct vge_test_game, subsys);
+  struct vge_entity *entity;
   if(vge_input_keypressed(test_game->input, VGEINPUT_KEY_ESCAPE) ||
       vge_input_keypressed(test_game->input, VGEINPUT_KEY_Q)) {
     printf("exiting...\n");
     vge_game_stop(game);
+  }
+  if(vge_input_keyheld(test_game->input, VGEINPUT_KEY_A)) {
+    entity = vge_scene_get_entity(
+        vge_scene_manager_get_cur_scene(test_game->scene_manager),
+        "the_only_cube");
+    entity->position.x += game->frame_dt * 0.5f;
+  }
+  if(vge_input_keyheld(test_game->input, VGEINPUT_KEY_D)) {
+    entity = vge_scene_get_entity(
+        vge_scene_manager_get_cur_scene(test_game->scene_manager),
+        "the_only_cube");
+    entity->position.x -= game->frame_dt * 0.5f;
+  }
+  if(vge_input_keyheld(test_game->input, VGEINPUT_KEY_W)) {
+    entity = vge_scene_get_entity(
+        vge_scene_manager_get_cur_scene(test_game->scene_manager),
+        "the_only_cube");
+    entity->position.y += game->frame_dt * 0.5f;
+  }
+  if(vge_input_keyheld(test_game->input, VGEINPUT_KEY_S)) {
+    entity = vge_scene_get_entity(
+        vge_scene_manager_get_cur_scene(test_game->scene_manager),
+        "the_only_cube");
+    entity->position.y -= game->frame_dt * 0.5f;
+  }
+  if(vge_input_keyheld(test_game->input, VGEINPUT_KEY_Z)) {
+    entity = vge_scene_get_entity(
+        vge_scene_manager_get_cur_scene(test_game->scene_manager),
+        "the_only_cube");
+    entity->position.z += game->frame_dt * 1.0f;
+  }
+  if(vge_input_keyheld(test_game->input, VGEINPUT_KEY_C)) {
+    entity = vge_scene_get_entity(
+        vge_scene_manager_get_cur_scene(test_game->scene_manager),
+        "the_only_cube");
+    entity->position.z -= game->frame_dt * 1.0f;
   }
 }
 
