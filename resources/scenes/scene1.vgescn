@@ -1,6 +1,6 @@
 {
   "name": "scene1",
-  "entitites": [
+  "entities": [
     {
       "name": "the_only_cube",
       "prefab": "cube",

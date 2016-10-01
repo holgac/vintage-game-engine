@@ -17,6 +17,7 @@
 #include "core/scene/scenemanager.h"
 #include "core/scene/scene.h"
 #include "core/scene/prefab.h"
+#include "core/scene/entity.h"
 #include "core/resource/resourceloader.h"
 #include "core/game.h"
 #include "external/nxjson/nxjson.h"
@@ -65,14 +66,17 @@ static void _unload_scene_prefab(struct vge_resource_loader *loader,
 {
 }
 
-static struct vge_entity *_load_entity(struct vge_game *game, struct vge_scene *scene, const nx_json *json)
+/* TODO: move to somewhere else */
+static struct vge_entity *_load_entity(struct vge_game *game, const nx_json *json)
 {
   const nx_json* elem;
   struct vge_entity *entity;
   struct vge_resource *prefab;
-  elem = nx_json_get(json, "name");
+  elem = nx_json_get(json, "prefab");
   prefab = vge_resource_manager_get_resource(&game->rman, elem->text_value);
   entity = vge_prefab_create_entity(prefab);
+  elem = nx_json_get(json, "name");
+  strcpy(entity->name, elem->text_value);
   /* TODO: set name, pos etc */
   return entity;
 }
@@ -96,10 +100,12 @@ static struct vge_scene *_load_scene(struct vge_game *game, const char *path)
   fclose(f);
   json = nx_json_parse(buf, 0);
   scene = malloc(sizeof(struct vge_scene));
+  vge_list_init(&scene->entity_list);
   elem = nx_json_get(json, "entities");
   if(elem) {
     for(i=0; i<elem->length; ++i) {
-      entity = _load_entity(game, scene, nx_json_item(elem, i));
+      entity = _load_entity(game, nx_json_item(elem, i));
+      vge_list_add(&scene->entity_list, &entity->ent_node);
     }
   }
   return scene;

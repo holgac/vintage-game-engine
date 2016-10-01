@@ -26,6 +26,8 @@
 #include "core/scene/entity.h"
 #include "core/log/logger.h"
 
+#define VGE_GRAPHICS_COMPONENT_CLONE 1
+
 struct vge_graphics_component
 {
   struct vge_component component;
@@ -33,6 +35,7 @@ struct vge_graphics_component
   struct vge_vertex3 *vertices;
   u32 num_indices;
   u32 *indices;
+  u32 flags;
 };
 
 struct vge_component *_load_component(struct vge_component_loader *loader,
@@ -54,14 +57,13 @@ struct vge_component *_load_component(struct vge_component_loader *loader,
   if(!elem)
     vge_log_and_goto(freevert, "Graphics Component should have indices!");
   comp->indices = malloc(elem->length * 3 * sizeof(u32));
-  // TODO: Storing as string or array of ints?
   for(i=0; i<elem->length; ++i)
     sscanf(nx_json_item(elem, i)->text_value, "%u %u %u",
         &comp->indices[i*3], &comp->indices[i*3 + 1],
         &comp->indices[i*3 + 2]);
   comp->num_indices = elem->length;
-
   comp->component.loader = loader;
+  comp->flags = 0;
 
   return &comp->component;
 freevert:
@@ -75,15 +77,28 @@ freecomp:
 struct vge_component *_clone_component(struct vge_component_loader *loader,
     struct vge_component *comp)
 {
-  return NULL;
+  struct vge_graphics_component *orig, *clone;
+  orig = vge_container_of(comp, struct vge_graphics_component, component);
+  clone = malloc(sizeof(struct vge_graphics_component));
+  clone->component.loader = orig->component.loader;
+  vge_list_init(&clone->component.comp_node);
+  clone->num_vertices = orig->num_vertices;
+  clone->vertices = orig->vertices;
+  clone->num_indices = orig->num_indices;
+  clone->indices = orig->indices;
+  clone->flags = orig->flags | VGE_GRAPHICS_COMPONENT_CLONE;
+  return &clone->component;
 }
+
 void _unload_component(struct vge_component_loader *loader,
     struct vge_component *comp)
 {
   struct vge_graphics_component *grcomp;
   grcomp = vge_container_of(comp, struct vge_graphics_component, component);
-  free(grcomp->indices);
-  free(grcomp->vertices);
+  if (!(grcomp->flags & VGE_GRAPHICS_COMPONENT_CLONE)) {
+    free(grcomp->indices);
+    free(grcomp->vertices);
+  }
   free(grcomp);
 }
 

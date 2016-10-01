@@ -39,6 +39,7 @@ int game_main(int argc, char **argv)
   vge_input_init(&game, &test_game.input);
   vge_scene_manager_init(&game, &test_game.scene_manager);
   vge_resource_manager_load_recursive(&game.rman, &game, "./resources");
+  vge_scene_manager_load_scene(&game, test_game.scene_manager, "scene1");
 
   test_game.subsys.init = _init;
   test_game.subsys.destroy = _destroy;
