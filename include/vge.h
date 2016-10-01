@@ -25,5 +25,6 @@
 #include "core/game.h"
 #include "core/subsystem.h"
 #include "renderer/renderer.h"
+#include "renderer/camera.h"
 #include "input/input.h"
 #endif

@@ -13,21 +13,15 @@
   You should have received a copy of the GNU General Public License
   along with Vintage Game Engine.  If not, see <http://www.gnu.org/licenses/>.
 */
-#ifndef __VGE_RENDERER_H
-#define __VGE_RENDERER_H
+#ifndef __VGE_CAMERA_H
+#define __VGE_CAMERA_H
 
-struct vge_game;
-struct vge_subsystem;
-struct vge_camera;
+#include "core/math/vector3.h"
 
-struct vge_window_properties {
-  char window_title[32];
-  int pos_x, pos_y;
-  int width, height;
-  int depth_buffer_size;
+struct vge_camera {
+  struct vge_vector3 pos, dir, up;
+  float fov;
+  float near, far;
 };
 
-int vge_renderer_init(struct vge_game *, struct vge_window_properties *,
-    struct vge_camera *, struct vge_subsystem **);
-void vge_renderer_set_camera(struct vge_subsystem *, struct vge_camera *);
 #endif

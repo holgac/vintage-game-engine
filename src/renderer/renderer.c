@@ -15,8 +15,10 @@
 */
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_opengl.h>
+#include <OpenGL/glu.h>
 
 #include "renderer/renderer.h"
+#include "renderer/camera.h"
 #include "renderer/graphicscomponent.h"
 #include "core/game.h"
 #include "core/containers/list.h"
@@ -27,7 +29,8 @@ struct vge_renderer_gl
   struct vge_subsystem subsys;
   struct SDL_Window *sdl_window;
   SDL_GLContext sdl_glcontext;
-  SDL_Renderer* sdl_renderer;
+  SDL_Renderer *sdl_renderer;
+  struct vge_camera *camera;
 };
 
 static void _vge_renderer_gl_init(struct vge_game *game,
@@ -61,15 +64,26 @@ static void _vge_renderer_gl_on_frame(struct vge_game *game,
     struct vge_subsystem *subsys)
 {
   struct vge_renderer_gl *renderer;
+  struct vge_camera *camera;
   renderer = vge_container_of(subsys, struct vge_renderer_gl, subsys);
   SDL_GL_SwapWindow(renderer->sdl_window);
   glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+  glMatrixMode(GL_PROJECTION);
   glLoadIdentity();
+  camera = renderer->camera;
+  glFrustum(-1.0, 1.0, -1.0, 1.0, camera->near, camera->far);
+  glMatrixMode(GL_MODELVIEW);
+  glLoadIdentity();
+  /* TODO: switch to matrix stuff once math supports it */
+  gluLookAt(camera->pos.x, camera->pos.y, camera->pos.z,
+      camera->dir.x, camera->dir.y, camera->dir.z,
+      camera->up.x, camera->up.y, camera->up.z);
 }
 
 
 int vge_renderer_init(struct vge_game *game,
-    struct vge_window_properties *props, struct vge_subsystem **subsys)
+    struct vge_window_properties *props, struct vge_camera *camera,
+    struct vge_subsystem **subsys)
 {
   struct vge_renderer_gl *renderer;
   GLenum gl_error;
@@ -103,28 +117,41 @@ int vge_renderer_init(struct vge_game *game,
   SDL_GL_SetSwapInterval(1);
   renderer->sdl_renderer = SDL_CreateRenderer(renderer->sdl_window, -1,
       SDL_RENDERER_ACCELERATED);
+  glViewport(0, 0, props?props->width:640, props?props->height:640);
+  glEnable(GL_CULL_FACE);
+  glFrontFace(GL_CCW);
+  glCullFace(GL_BACK);
 
   glClearColor(1.0f, 0.0f, 1.0f, 1.0f );
-  glMatrixMode( GL_PROJECTION );
+  glMatrixMode(GL_PROJECTION);
   glLoadIdentity();
+  glFrustum(-1.0, 1.0, -1.0, 1.0, camera->near, camera->far);
 
   gl_error = glGetError();
-  if( gl_error != GL_NO_ERROR )
+  if(gl_error != GL_NO_ERROR)
   {
     fprintf(stderr, "OpenGL Error\n");
     return -1;
   }
   //Initialize Modelview Matrix
-  glMatrixMode( GL_MODELVIEW );
+  glMatrixMode(GL_MODELVIEW);
   glLoadIdentity();
   strcpy(renderer->subsys.name, "renderer");
   renderer->subsys.init = _vge_renderer_gl_init;
   renderer->subsys.destroy = _vge_renderer_gl_destroy;
   renderer->subsys.on_frame = _vge_renderer_gl_on_frame;
   renderer->subsys.on_step = _vge_renderer_gl_on_step;
+  renderer->camera = camera;
 
   vge_game_add_subsystem(game, &renderer->subsys);
   *subsys = &renderer->subsys;
   return 0;
 }
 
+void vge_renderer_set_camera(struct vge_subsystem *subsys,
+    struct vge_camera *camera)
+{
+  struct vge_renderer_gl *renderer;
+  renderer = vge_container_of(subsys, struct vge_renderer_gl, subsys);
+  renderer->camera = camera;
+}

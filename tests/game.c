@@ -4,6 +4,7 @@ struct vge_test_game {
   struct vge_subsystem *renderer;
   struct vge_subsystem *input;
   struct vge_subsystem *scene_manager;
+  struct vge_camera camera;
 };
 
 static void _init(struct vge_game *game, struct vge_subsystem *subsys)
@@ -72,7 +73,14 @@ int game_main(int argc, char **argv)
   struct vge_test_game test_game;
 
   vge_game_init(&game);
-  vge_renderer_init(&game, NULL, &test_game.renderer);
+  vge_vector3_set(&test_game.camera.pos, 0, 0, -10);
+  vge_vector3_set(&test_game.camera.dir, 0, 0, 1);
+  vge_vector3_set(&test_game.camera.up, 0, 1, 0);
+  test_game.camera.fov = 50.0f;
+  test_game.camera.near = 1.5f;
+  test_game.camera.far = 50.0f;
+  vge_renderer_init(&game, NULL, &test_game.camera, &test_game.renderer);
+
   vge_input_init(&game, &test_game.input);
   vge_scene_manager_init(&game, &test_game.scene_manager);
   vge_resource_manager_load_recursive(&game.rman, &game, "./resources");
