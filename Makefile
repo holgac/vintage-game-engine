@@ -8,7 +8,7 @@ ifeq ($(UNAME), Linux)
 	PLATFORM=LINUX
 endif
 
-LDLIBS=-lSDL2
+LDLIBS=-lSDL2 -lIL -lILU -lILUT
 ifeq ($(PLATFORM), LINUX)
 	LDLIBS+=-lGL
 endif

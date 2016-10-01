@@ -62,17 +62,17 @@ static struct vge_prefab *_load_single(struct vge_resource_loader *loader,
 static struct vge_resource *_load_prefab(struct vge_resource_loader *loader,
     struct vge_game *game, const char *path)
 {
-    const struct nx_json *json;
-    FILE* f;
-    off_t flen;
-    char* buf;
-    f = fopen(path, "rb");
-    fseeko(f, 0, SEEK_END);
-    flen = ftello(f);
-    buf = alloca(flen+1);
-    fseeko(f, 0, SEEK_SET);
-    fread(buf, flen, 1, f);
-    json = nx_json_parse(buf, 0);
+  const struct nx_json *json;
+  FILE* f;
+  off_t flen;
+  char* buf;
+  f = fopen(path, "rb");
+  fseeko(f, 0, SEEK_END);
+  flen = ftello(f);
+  buf = alloca(flen+1);
+  fseeko(f, 0, SEEK_SET);
+  fread(buf, flen, 1, f);
+  json = nx_json_parse(buf, 0);
   if(json->type != NX_JSON_OBJECT)
     vge_log_and_return(NULL, "Prefab file is invalid: %s", path);
   return &_load_single(loader, game, json)->resource;
@@ -84,7 +84,7 @@ static struct vge_resource *_clone_prefab(struct vge_resource_loader *loader,
   return NULL;
 }
 
-void _unload_prefab(struct vge_resource_loader *loader,
+static void _unload_prefab(struct vge_resource_loader *loader,
     struct vge_resource *scn)
 {
 }

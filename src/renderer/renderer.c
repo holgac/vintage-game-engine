@@ -19,6 +19,7 @@
 
 #include "renderer/renderer.h"
 #include "renderer/camera.h"
+#include "renderer/texture.h"
 #include "renderer/graphicscomponent.h"
 #include "core/game.h"
 #include "core/containers/list.h"
@@ -42,6 +43,8 @@ static void _vge_renderer_gl_init(struct vge_game *game,
    */
   vge_component_manager_register_loader(&game->cman,
       vge_graphics_component_get_loader());
+  vge_resource_manager_register_loader(&game->rman,
+      vge_texture_get_loader());
 }
 
 static void _vge_renderer_gl_destroy(struct vge_game *game,

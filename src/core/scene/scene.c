@@ -49,6 +49,7 @@ static struct vge_resource *_load_scene_prefab(struct vge_resource_loader *loade
     vge_log_and_goto(free_scene_prefab, "Name invalid in scene");
   strcpy(scene_prefab->resource.name, elem->text_value);
   strcpy(scene_prefab->path, path);
+  scene_prefab->path[pathlen] = 0;
   return &scene_prefab->resource;
 free_scene_prefab:
   free(scene_prefab);

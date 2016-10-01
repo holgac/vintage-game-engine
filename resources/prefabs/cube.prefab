@@ -5,6 +5,7 @@
   "components": [
     {
       "type": "graphics_component_raw",
+      "texture": "bricks",
       "vertices": [
         {
           "position": "1 1 -1"

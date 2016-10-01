@@ -117,13 +117,17 @@ struct vge_resource *vge_resource_manager_load_resource(
     vge_log_and_return(NULL, "No extension found in file %s", path);
   if(strchr(extension, '/'))
     vge_log_and_return(NULL, "Error in extension of %s", path);
+  /* TODO: multiple extension support for resource loaders */
   rbnode = vge_rbtree_find_match(&rman->resource_loaders, extension + 1, _resource_loader_match);
   if(!rbnode)
     vge_log_and_return(NULL, "No loader registered to load %s", path);
   loader = vge_container_of(rbnode, struct vge_resource_loader, loader_node);
+  /* TODO: passing around vge_resource defeats the type safety except that
+   * loader->name can be checked. Find a more elegant method for this? */
   res = loader->load(loader, game, path);
   if(!res)
     vge_log_and_return(NULL, "Failed to load %s", path);
+  /* TODO: name collision checks */
   vge_rbtree_insert(&rman->resources, &res->res_node);
   vge_log("Loaded resource %s", res->name);
   return res;
