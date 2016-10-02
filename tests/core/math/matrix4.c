@@ -13,6 +13,11 @@
   You should have received a copy of the GNU General Public License
   along with Vintage Game Engine.  If not, see <http://www.gnu.org/licenses/>.
 */
-#include "core/math/math.h"
+#include <assert.h>
+#include "engine.h"
+#include "core/math/matrix4.h"
 
-const vge_real_t vge_math_epsilon = 0.00001f;
+VGETEST matrix_identity()
+{
+//  struct vge_matrix4 m1, m2;
+}

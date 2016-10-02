@@ -9,6 +9,8 @@ void rbtree_init();
 void rbtree_insert();
 void rbtree_delete();
 void rbtree_duplicate();
+void matrix_identity();
+void vector4_set_and_equals();
 
 void expect(int result, char *errormsg)
 {
@@ -27,8 +29,10 @@ void run_tests()
 	rbtree_insert();
 	rbtree_delete();
 	rbtree_duplicate();
+	matrix_identity();
+	vector4_set_and_equals();
 	time_elapsed = vge_stopwatch_elapsed(&sw);
-	printf("Ran 6 tests in %2.3f\n", time_elapsed);
+	printf("Ran 8 tests in %2.3f\n", time_elapsed);
 }
 int main(int argc, char **argv)
 {

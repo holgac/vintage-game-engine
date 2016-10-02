@@ -28,6 +28,7 @@ void expect(int result, char *errormsg);
 #define VGE_PLATFORM_LINUX
 #endif
 
+/* TODO: these names are inconsistent */
 typedef char s8;
 typedef short s16;
 typedef int s32;
@@ -37,6 +38,7 @@ typedef unsigned short u16;
 typedef unsigned int u32;
 typedef unsigned long u64;
 typedef double vge_time_t;
+typedef float vge_real_t;
 #define vge_offsetof(TYPE, MEMBER) ((size_t) &((TYPE *)0)->MEMBER)
 #define vge_container_of(ptr, type, member) ({\
   const typeof( ((type *)0)->member ) *__mptr = (ptr);    \

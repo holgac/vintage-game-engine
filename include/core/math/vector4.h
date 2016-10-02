@@ -13,6 +13,26 @@
   You should have received a copy of the GNU General Public License
   along with Vintage Game Engine.  If not, see <http://www.gnu.org/licenses/>.
 */
-#include "core/math/math.h"
+#ifndef __VGE_VECTOR4_H
+#define __VGE_VECTOR4_H
+#include "engine.h"
 
-const vge_real_t vge_math_epsilon = 0.00001f;
+struct vge_vector4
+{
+  union {
+    struct {
+    vge_real_t x, y, z, t;
+    };
+    vge_real_t coords[4];
+  };
+};
+
+void vge_vector4_set(struct vge_vector4 *src, float x, float y, float z);
+void vge_vector4_read(struct vge_vector4 *src, const char *data);
+int vge_vector4_equals(struct vge_vector4 *lhs, struct vge_vector4 *rhs);
+extern const struct vge_vector4 vge_vector4_x;
+extern const struct vge_vector4 vge_vector4_y;
+extern const struct vge_vector4 vge_vector4_z;
+extern const struct vge_vector4 vge_vector4_t;
+#endif
+

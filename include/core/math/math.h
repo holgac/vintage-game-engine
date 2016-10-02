@@ -13,4 +13,13 @@
   You should have received a copy of the GNU General Public License
   along with Vintage Game Engine.  If not, see <http://www.gnu.org/licenses/>.
 */
+#ifndef __VGE_MATH_H
+#define __VGE_MATH_H
+#include "engine.h"
 
+static inline vge_real_t vge_math_absr(vge_real_t r)
+{
+  return r>0?r:-r;
+}
+extern const vge_real_t vge_math_epsilon;
+#endif
