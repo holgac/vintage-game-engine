@@ -21,12 +21,12 @@ const struct vge_vector4 vge_vector4_y = { .coords = {0.0f, 1.0f, 0.0f, 0.0f} };
 const struct vge_vector4 vge_vector4_z = { .coords = {0.0f, 0.0f, 1.0f, 0.0f} };
 const struct vge_vector4 vge_vector4_t = { .coords = {0.0f, 0.0f, 0.0f, 1.0f} };
 
-void vge_vector4_set(struct vge_vector4 *src, float x, float y, float z)
+void vge_vector4_set(struct vge_vector4 *dst, float x, float y, float z)
 {
-  src->x = x;
-  src->y = y;
-  src->z = z;
-  src->t = 0.0f;
+  dst->x = x;
+  dst->y = y;
+  dst->z = z;
+  dst->t = 0.0f;
 }
 
 void vge_vector4_read(struct vge_vector4 *src, const char *data)
@@ -35,9 +35,19 @@ void vge_vector4_read(struct vge_vector4 *src, const char *data)
   src->t = 0.0f;
 }
 
-int vge_vector4_equals(struct vge_vector4 *lhs, struct vge_vector4 *rhs)
+int vge_vector4_equals(const struct vge_vector4 *lhs,
+    const struct vge_vector4 *rhs)
 {
-  return vge_math_absr(lhs->x - rhs->x) < vge_math_epsilon
-    && vge_math_absr(lhs->y - rhs->y) < vge_math_epsilon
-    && vge_math_absr(lhs->z - rhs->z) < vge_math_epsilon;
+  return vge_math_equalsr(lhs->x, rhs->x)
+    && vge_math_equalsr(lhs->y, rhs->y)
+    && vge_math_equalsr(lhs->z, rhs->z);
 }
+
+vge_real_t vge_vector4_dot(const struct vge_vector4 *lhs,
+    const struct vge_vector4 *rhs)
+{
+  return lhs->x * rhs->x
+    + lhs->y * rhs->y
+    + lhs->z * rhs->z;
+}
+

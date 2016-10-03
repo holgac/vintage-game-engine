@@ -17,12 +17,27 @@
 #define __VGE_MATRIX4_H
 #include "engine.h"
 
+struct vge_vector4;
+
 struct vge_matrix4
 {
   vge_real_t m[16];
 };
 
-void vge_matrix4_identity(struct vge_matrix4 *);
+extern const struct vge_matrix4 vge_matrix4_identity;
+
+#define vge_matrix4_setm(dst, src) memcpy(dst, src, sizeof(struct vge_matrix4))
+void vge_matrix4_multm(struct vge_matrix4 * restrict dst,
+    const struct vge_matrix4 *lhs,
+    const struct vge_matrix4 *rhs);
+int vge_matrix4_equals(const struct vge_matrix4 *lhs,
+    const struct vge_matrix4 *rhs);
+/* axis should be unit */
+void vge_matrix4_rotation(struct vge_matrix4 *dst,
+    const struct vge_vector4 *axis,
+    vge_real_t angle);
+void vge_matrix4_position(struct vge_matrix4 *dst,
+    const struct vge_vector4 *pos);
 #endif
 
 

@@ -15,4 +15,8 @@
 */
 #include "core/math/math.h"
 
-const vge_real_t vge_math_epsilon = 0.00001f;
+const vge_real_t vge_math_epsilon = 0.00001;
+const vge_real_t vge_math_halfpi = 1.57079632679;
+const vge_real_t vge_math_pi = 3.14159265359f;
+const vge_real_t vge_math_threehalfpi = 4.71238898038f;
+const vge_real_t vge_math_doublepi = 6.28318530718f;

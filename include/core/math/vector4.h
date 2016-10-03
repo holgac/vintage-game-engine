@@ -27,12 +27,17 @@ struct vge_vector4
   };
 };
 
-void vge_vector4_set(struct vge_vector4 *src, float x, float y, float z);
-void vge_vector4_read(struct vge_vector4 *src, const char *data);
-int vge_vector4_equals(struct vge_vector4 *lhs, struct vge_vector4 *rhs);
 extern const struct vge_vector4 vge_vector4_x;
 extern const struct vge_vector4 vge_vector4_y;
 extern const struct vge_vector4 vge_vector4_z;
 extern const struct vge_vector4 vge_vector4_t;
+
+void vge_vector4_set(struct vge_vector4 *dst, float x, float y, float z);
+#define vge_vector4_setv(dst, src) memcpy((dst), (src), sizeof(struct vge_vector4))
+void vge_vector4_read(struct vge_vector4 *dst, const char *data);
+int vge_vector4_equals(const struct vge_vector4 *lhs,
+    const struct vge_vector4 *rhs);
+vge_real_t vge_vector4_dot(const struct vge_vector4 *lhs,
+    const struct vge_vector4 *rhs);
 #endif
 

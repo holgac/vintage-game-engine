@@ -17,9 +17,18 @@
 #define __VGE_MATH_H
 #include "engine.h"
 
+extern const vge_real_t vge_math_epsilon;
+extern const vge_real_t vge_math_halfpi;
+extern const vge_real_t vge_math_pi;
+extern const vge_real_t vge_math_threehalfpi;
+extern const vge_real_t vge_math_doublepi;
 static inline vge_real_t vge_math_absr(vge_real_t r)
 {
   return r>0?r:-r;
 }
-extern const vge_real_t vge_math_epsilon;
+static inline int vge_math_equalsr(vge_real_t r1, vge_real_t r2)
+{
+  return vge_math_absr(r1-r2) < vge_math_epsilon;
+}
+/* TODO: trigonometry with tables */
 #endif

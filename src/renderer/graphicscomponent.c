@@ -122,9 +122,16 @@ void _on_frame(struct vge_component *comp, struct vge_entity *ent)
   u32 i;
   struct vge_vertex3 *vert;
   GLuint *handle;
+  struct vge_matrix4 mat;
   grcomp = vge_container_of(comp, struct vge_graphics_component, component);
   glPushMatrix();
-  glTranslatef(ent->position.x, ent->position.y, ent->position.z);
+  vge_matrix4_setm(&mat, &ent->rotation);
+  /* TODO: do it in math functions after implementing quaternion */
+  mat.m[12] = ent->position.x;
+  mat.m[13] = ent->position.y;
+  mat.m[14] = ent->position.z;
+  mat.m[15] = 1.0f;
+  glMultMatrixf(mat.m);
   if (grcomp->texture) {
     glEnable(GL_TEXTURE_2D);
     handle = vge_texture_get_handle(grcomp->texture);

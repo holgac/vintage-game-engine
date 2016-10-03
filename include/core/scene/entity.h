@@ -16,7 +16,8 @@
 #ifndef __VGE_ENTITY_H
 #define __VGE_ENTITY_H
 
-#include "core/math/vector3.h"
+#include "core/math/vector4.h"
+#include "core/math/matrix4.h"
 #include "core/containers/list.h"
 #include "core/resource/resource.h"
 
@@ -29,11 +30,10 @@ struct vge_entity
   struct vge_rbnode ent_node_by_name;
   struct vge_list component_list;
   struct vge_prefab *prefab;
-  /* TODO: store rbtree from scene to all entities using name */
   char name[VGE_ENTITY_NAME_MAX];
-  /* TODO: store children */
-  /* TODO: store vge_transform that encapsulates pos + rot */
-  struct vge_vector3 position;
+  /* TODO: store position + rot quaternion and calculate this on the fly */
+  struct vge_matrix4 rotation;
+  struct vge_vector4 position;
 };
 #endif
 
