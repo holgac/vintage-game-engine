@@ -31,6 +31,7 @@ extern const struct vge_vector4 vge_vector4_x;
 extern const struct vge_vector4 vge_vector4_y;
 extern const struct vge_vector4 vge_vector4_z;
 extern const struct vge_vector4 vge_vector4_t;
+extern const struct vge_vector4 vge_vector4_identity;
 
 void vge_vector4_set(struct vge_vector4 *dst, float x, float y, float z);
 #define vge_vector4_setv(dst, src) memcpy((dst), (src), sizeof(struct vge_vector4))

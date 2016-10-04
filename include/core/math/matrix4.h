@@ -18,6 +18,7 @@
 #include "engine.h"
 
 struct vge_vector4;
+struct vge_quaternion;
 
 struct vge_matrix4
 {
@@ -37,6 +38,9 @@ void vge_matrix4_rotation(struct vge_matrix4 *dst,
     const struct vge_vector4 *axis,
     vge_real_t angle);
 void vge_matrix4_position(struct vge_matrix4 *dst,
+    const struct vge_vector4 *pos);
+void vge_matrix4_construct(struct vge_matrix4 *dst,
+    const struct vge_quaternion *quat,
     const struct vge_vector4 *pos);
 #endif
 

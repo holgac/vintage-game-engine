@@ -16,6 +16,7 @@
 #include <math.h>
 #include "core/math/math.h"
 #include "core/math/vector4.h"
+#include "core/math/quaternion.h"
 #include "core/math/matrix4.h"
 
 const struct vge_matrix4 vge_matrix4_identity = { .m = {
@@ -113,4 +114,31 @@ void vge_matrix4_position(struct vge_matrix4 *dst,
   dst->m[13] = pos->y;
   dst->m[14] = pos->z;
   dst->m[15] = 0.0f;
+}
+/*
+w2+x2-y2-z2 2xy-2wz 2xz+2wy 0
+2xy+2wz w2-x2+y2-z2 2yz+2wx 0
+2xz-2wy 2yz-2wx w2-x2-y2+z2 0
+0 0 0 1
+*/
+void vge_matrix4_construct(struct vge_matrix4 *dst,
+    const struct vge_quaternion *quat,
+    const struct vge_vector4 *pos)
+{
+  dst->m[0] = 1.0f - 2*quat->y*quat->y - 2*quat->z*quat->z;
+  dst->m[1] = 2*quat->x*quat->y + 2*quat->w*quat->z;
+  dst->m[2] = 2*quat->x*quat->z - 2*quat->w*quat->y;
+  dst->m[3] = 0.0f;
+  dst->m[4] = 2*quat->x*quat->y - 2*quat->w*quat->z;
+  dst->m[5] = 1.0f - 2*quat->x*quat->x - 2*quat->z*quat->z;
+  dst->m[6] = 2*quat->y*quat->z + 2*quat->w*quat->x;
+  dst->m[7] = 0.0f;
+  dst->m[8] = 2*quat->x*quat->z + 2*quat->w*quat->y;
+  dst->m[9] = 2*quat->y*quat->z - 2*quat->w*quat->x;
+  dst->m[10] = 1.0f - 2*quat->x*quat->x - 2*quat->y*quat->y;
+  dst->m[11] = 0.0f;
+  dst->m[12] = pos->x;
+  dst->m[13] = pos->y;
+  dst->m[14] = pos->z;
+  dst->m[15] = 1.0f;
 }

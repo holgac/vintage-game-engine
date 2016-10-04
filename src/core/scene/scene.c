@@ -80,7 +80,7 @@ static struct vge_entity *_load_entity(struct vge_game *game, const nx_json *jso
   strcpy(entity->name, elem->text_value);
   elem = nx_json_get(json, "position");
   vge_vector4_read(&entity->position, elem->text_value);
-  vge_matrix4_setm(&entity->rotation, &vge_matrix4_identity);
+  vge_quaternion_setq(&entity->rotation, &vge_quaternion_identity);
   return entity;
 }
 

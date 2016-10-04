@@ -20,6 +20,7 @@ const struct vge_vector4 vge_vector4_x = { .coords = {1.0f, 0.0f, 0.0f, 0.0f} };
 const struct vge_vector4 vge_vector4_y = { .coords = {0.0f, 1.0f, 0.0f, 0.0f} };
 const struct vge_vector4 vge_vector4_z = { .coords = {0.0f, 0.0f, 1.0f, 0.0f} };
 const struct vge_vector4 vge_vector4_t = { .coords = {0.0f, 0.0f, 0.0f, 1.0f} };
+const struct vge_vector4 vge_vector4_identity = { .coords = {0.0f, 0.0f, 0.0f, 0.0f} };
 
 void vge_vector4_set(struct vge_vector4 *dst, float x, float y, float z)
 {

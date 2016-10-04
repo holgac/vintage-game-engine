@@ -19,7 +19,7 @@ static void _on_frame(struct vge_game *game, struct vge_subsystem *subsys)
 {
   struct vge_test_game *test_game = vge_container_of(subsys, struct vge_test_game, subsys);
   struct vge_entity *entity;
-  struct vge_matrix4 mat, mat2;
+  struct vge_quaternion quat, quat2;
   entity = vge_scene_get_entity(
       vge_scene_manager_get_cur_scene(test_game->scene_manager),
       "the_only_cube");
@@ -47,19 +47,22 @@ static void _on_frame(struct vge_game *game, struct vge_subsystem *subsys)
     entity->position.z -= game->frame_dt * 1.0f;
   }
   if(vge_input_keyheld(test_game->input, VGEINPUT_KEY_R)) {
-    vge_matrix4_rotation(&mat, &vge_vector4_x, game->frame_dt * 0.5f);
-    vge_matrix4_multm(&mat2, &entity->rotation, &mat);
-    vge_matrix4_setm(&entity->rotation, &mat2);
+    vge_quaternion_construct(&quat, &vge_vector4_x, game->frame_dt * 0.5f);
+    vge_quaternion_multq(&quat2, &quat, &entity->rotation);
+    vge_quaternion_setq(&entity->rotation, &quat2);
   }
   if(vge_input_keyheld(test_game->input, VGEINPUT_KEY_T)) {
-    vge_matrix4_rotation(&mat, &vge_vector4_y, game->frame_dt * 0.5f);
-    vge_matrix4_multm(&mat2, &entity->rotation, &mat);
-    vge_matrix4_setm(&entity->rotation, &mat2);
+    vge_quaternion_construct(&quat, &vge_vector4_y, game->frame_dt * 0.5f);
+    vge_quaternion_multq(&quat2, &quat, &entity->rotation);
+    vge_quaternion_setq(&entity->rotation, &quat2);
   }
   if(vge_input_keyheld(test_game->input, VGEINPUT_KEY_Y)) {
-    vge_matrix4_rotation(&mat, &vge_vector4_z, game->frame_dt * 0.5f);
-    vge_matrix4_multm(&mat2, &entity->rotation, &mat);
-    vge_matrix4_setm(&entity->rotation, &mat2);
+    vge_quaternion_construct(&quat, &vge_vector4_z, game->frame_dt * 0.5f);
+    vge_quaternion_multq(&quat2, &quat, &entity->rotation);
+    vge_quaternion_setq(&entity->rotation, &quat2);
+  }
+  if(vge_input_keypressed(test_game->input, VGEINPUT_KEY_U)) {
+    vge_quaternion_normalize(&entity->rotation);
   }
 }
 

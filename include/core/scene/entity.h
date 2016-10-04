@@ -17,7 +17,7 @@
 #define __VGE_ENTITY_H
 
 #include "core/math/vector4.h"
-#include "core/math/matrix4.h"
+#include "core/math/quaternion.h"
 #include "core/containers/list.h"
 #include "core/resource/resource.h"
 
@@ -31,8 +31,8 @@ struct vge_entity
   struct vge_list component_list;
   struct vge_prefab *prefab;
   char name[VGE_ENTITY_NAME_MAX];
-  /* TODO: store position + rot quaternion and calculate this on the fly */
-  struct vge_matrix4 rotation;
+  /* TODO: store result matrix + is_dirty flag */
+  struct vge_quaternion rotation;
   struct vge_vector4 position;
 };
 #endif
