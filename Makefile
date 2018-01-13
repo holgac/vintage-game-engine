@@ -8,13 +8,14 @@ ifeq ($(UNAME), Linux)
 	PLATFORM=LINUX
 endif
 
-LDLIBS=-lSDL2 -lIL -lILU -lILUT
+LDLIBS=-lSDL2
 ifeq ($(PLATFORM), LINUX)
-	LDLIBS+=-lGL
+	LDLIBS+=-lGL -lGLU -lm
 endif
 ifeq ($(PLATFORM), OSX)
 	LDLIBS+=-framework OpenGL
 endif
+LDLIBS+=-lIL -lILU -lILUT
 
 DEBUG=true
 INCLUDEDIR=./include

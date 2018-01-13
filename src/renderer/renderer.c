@@ -13,9 +13,14 @@
   You should have received a copy of the GNU General Public License
   along with Vintage Game Engine.  If not, see <http://www.gnu.org/licenses/>.
 */
+#include "engine.h"
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_opengl.h>
+#ifdef VGE_PLATFORM_LINUX
+#include <GL/glu.h>
+#else
 #include <OpenGL/glu.h>
+#endif
 
 #include "renderer/renderer.h"
 #include "renderer/camera.h"

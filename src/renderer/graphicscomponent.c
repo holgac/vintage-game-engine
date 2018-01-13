@@ -125,7 +125,6 @@ void _on_frame(struct vge_component *comp, struct vge_entity *ent)
   struct vge_vertex3 *vert;
   GLuint *handle;
   struct vge_matrix4 mat;
-  struct vge_vector4 vec;
   grcomp = vge_container_of(comp, struct vge_graphics_component, component);
   glPushMatrix();
   vge_matrix4_construct(&mat, &ent->rotation, &ent->position);
