@@ -32,4 +32,4 @@ autom4te.cache
 # ---
 *.swp
 vge
-tests.c
+tests_gen.c

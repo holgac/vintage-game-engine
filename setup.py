@@ -54,7 +54,7 @@ int main(int argc, char **argv)
   for f in functions:
     declarations += 'void ' + f + '();\n'
     calls += callformat.format(f=f)
-  tests = open('tests.c', 'w')
+  tests = open('tests_gen.c', 'w')
   tests.write(fileformat.format(declarations=declarations, calls=calls, count=len(functions)))
 
 def all_c_files(path='./tests'):
