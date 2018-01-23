@@ -38,12 +38,7 @@ void run_tests(const char *pattern)
 }}
 int main(int argc, char **argv)
 {{
-  if(argc > 1 && strcmp(argv[1], "test") == 0) {{
-    run_tests(argv[2]);
-  }} else {{
-    printf("Running game_main()...\\n");
-    game_main(argc, argv);
-  }}
+	run_tests(argv[1]);
   return 0;
 }}
 '''
@@ -57,7 +52,7 @@ int main(int argc, char **argv)
   tests = open('tests_gen.c', 'w')
   tests.write(fileformat.format(declarations=declarations, calls=calls, count=len(functions)))
 
-def all_c_files(path='./tests'):
+def all_c_files(path='./'):
   files = os.listdir(path)
   for f in files:
     fpath = os.path.join(path, f)
@@ -69,7 +64,7 @@ def all_c_files(path='./tests'):
       yield fpath
   raise StopIteration
 
-def all_functions(path='./tests'):
+def all_functions(path='./'):
   for f in all_c_files(path):
     fp = open(f, 'r')
     for l in fp:

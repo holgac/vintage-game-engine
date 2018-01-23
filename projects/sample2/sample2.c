@@ -71,8 +71,9 @@ static void _on_step(struct vge_game *game, struct vge_subsystem *subsys)
 }
 
 
-int game_main(int argc, char **argv)
+int main(int argc, char **argv)
 {
+	printf("Running sample2\n");
   struct vge_game game;
   struct vge_test_game test_game;
 
